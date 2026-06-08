@@ -1,228 +1,228 @@
-StockItemID,movement_quantity,transaction_count
-1,-5781.0,1049
-2,-5965.0,1079
-3,-56010.0,1023
-4,-5722.0,1067
-5,-5469.0,1048
-6,-5475.0,1041
-7,-5442.0,1031
-8,-5333.0,1016
-9,-5603.0,1063
-10,-5658.0,1069
-11,-5660.0,1042
-12,-5850.0,1090
-13,-6105.0,1118
-14,-5730.0,1073
-15,-5690.0,1067
-16,-6108.0,1097
-17,-5369.0,1013
-18,-5968.0,1073
-19,-5688.0,1058
-20,-5698.0,1067
-21,-5818.0,1075
-22,-5880.0,1086
-23,-5797.0,1023
-24,-5564.0,1048
-25,-5801.0,1067
-26,-5764.0,1060
-27,-5442.0,1037
-28,-6033.0,1103
-29,-5725.0,1046
-30,-5691.0,1029
-31,-5772.0,1054
-32,-6059.0,1096
-33,-5924.0,1081
-34,-6040.0,1102
-35,-6046.0,1100
-36,-5797.0,1080
-37,-5526.0,1020
-38,-5581.0,1043
-39,-6076.0,1089
-40,-6011.0,1090
-41,-5700.0,1056
-42,-5927.0,1078
-43,-5526.0,1057
-44,-5912.0,1074
-45,-5583.0,1050
-46,-5588.0,1035
-47,-5780.0,1068
-48,-6011.0,1102
-49,-5589.0,1028
-50,-5832.0,1075
-51,-5545.0,1036
-52,-5662.0,1043
-53,-5675.0,1036
-54,-5598.0,1030
-55,-5842.0,1073
-56,-5749.0,1068
-57,-5880.0,1086
-58,-5801.0,1080
-59,-5424.0,1001
-60,-5697.0,1040
-61,-5786.0,1084
-62,-5611.0,1035
-63,-5488.0,1000
-64,-5854.0,1073
-65,-5836.0,1094
-66,-5591.0,1066
-67,-5640.0,1046
-68,-5741.0,1033
-69,-5831.0,1070
-70,-5600.0,1043
-71,-5802.0,1064
-72,-5806.0,1058
-73,-5603.0,1021
-74,-6071.0,1105
-75,-5727.0,1045
-76,-68796.0,1041
-77,17338224.0,1532
-78,18686148.0,1521
-79,-74232.0,1100
-80,8590812.0,1767
-81,-67116.0,1028
-82,-67648.0,1018
-83,-71688.0,1082
-84,-69096.0,1068
-85,-67992.0,1058
-86,18078336.0,1544
-87,-70524.0,1065
-88,-75228.0,1111
-89,-67356.0,1025
-90,-73032.0,1086
-91,-72312.0,1096
-92,-66804.0,1015
-93,-69024.0,1061
-94,-66324.0,984
-95,9200760.0,1752
-96,-68388.0,1037
-97,-68964.0,1038
-98,18837585.0,1514
-99,-65628.0,1017
-100,-69912.0,1049
-101,-72576.0,1099
-102,-5722.0,1043
-103,-5574.0,1028
-104,-6111.0,1124
-105,-5703.0,1026
-106,-5541.0,1010
-107,-5690.0,1062
-108,-6033.0,1084
-109,-6069.0,1081
-110,-5414.0,1006
-111,-6007.0,1072
-112,-5456.0,1028
-113,-5364.0,997
-114,-5398.0,1038
-115,-5868.0,1043
-116,-5538.0,1006
-117,-5833.0,1077
-118,-5811.0,1060
-119,-5996.0,1076
-120,-6091.0,1124
-121,-5969.0,1055
-122,-5902.0,1071
-123,-5925.0,1060
-124,-5910.0,1069
-125,-5835.0,1067
-126,-5624.0,1035
-127,-5679.0,1030
-128,-5573.0,1020
-129,-5787.0,1061
-130,-5784.0,1052
-131,-5777.0,1048
-132,-5915.0,1075
-133,-5752.0,1036
-134,-5631.0,1053
-135,-5601.0,1032
-136,-5763.0,1057
-137,-6023.0,1109
-138,-69600.0,1043
-139,-71364.0,1081
-140,-68016.0,1039
-141,-69132.0,1053
-142,-70821.0,1046
-143,-66792.0,1018
-144,-63892.0,984
-145,-72216.0,1072
-146,-70224.0,1077
-147,-67836.0,1043
-148,-73728.0,1100
-149,-68532.0,1036
-150,-5541.0,1031
-151,-5617.0,1027
-152,-5980.0,1075
-153,-57790.0,1062
-154,-59760.0,1097
-155,-53790.0,1004
-156,-54850.0,985
-157,-55760.0,1013
-158,-56564.0,1037
-159,-54190.0,1004
-160,-59006.0,1112
-161,-57340.0,1061
-162,-61120.0,1090
-163,-57450.0,1049
-164,-55210.0,1005
-165,-60880.0,1105
-166,-57170.0,1062
-167,-63750.0,1120
-168,-52520.0,973
-169,-54797.0,996
-170,-56660.0,1034
-171,-58030.0,1049
-172,-60250.0,1089
-173,-60720.0,1086
-174,-5494.0,1020
-175,-5474.0,1021
-176,-6085.0,1101
-177,-147250.0,1063
-178,-140897.0,1052
-179,-146201.0,1067
-180,-143400.0,1037
-181,-142425.0,1052
-182,-139350.0,1020
-183,-144676.0,1055
-184,11279700.0,1457
-185,-151700.0,1075
-186,-144675.0,1072
-187,-149250.0,1066
-188,-152200.0,1078
-189,-158288.0,1094
-190,-114420.0,1032
-191,-206892.0,1041
-192,-193284.0,978
-193,25010688.0,1529
-194,-142464.0,1075
-195,-138960.0,1057
-196,-137496.0,1032
-197,-133992.0,1037
-198,-143688.0,1081
-199,-141864.0,1078
-200,-141888.0,1084
-201,-143160.0,1064
-202,-129910.0,1000
-203,-57606.0,1042
-204,11992016.0,1548
-205,-57815.0,1040
-206,-65940.0,995
-207,-71772.0,1067
-208,-68988.0,1041
-209,-30285.0,1102
-210,-26955.0,996
-211,-56890.0,1049
-212,-60510.0,1076
-213,-5962.0,1085
-214,-6086.0,1095
-215,-5831.0,1063
-216,-55270.0,1039
-217,-56330.0,1040
-218,-57150.0,1038
-219,-57350.0,1040
-220,-16704.0,135
-221,-8784.0,131
-222,-19440.0,149
-223,-14760.0,117
-224,-14640.0,118
-225,-15288.0,127
-226,-17688.0,151
-227,-14976.0,118
+StockItemID,movement_quantity,transaction_count,StockItemName
+1,-5781.0,1049,USB missile launcher (Green)
+2,-5965.0,1079,USB rocket launcher (Gray)
+3,-56010.0,1023,Office cube periscope (Black)
+4,-5722.0,1067,USB food flash drive - sushi roll
+5,-5469.0,1048,USB food flash drive - hamburger
+6,-5475.0,1041,USB food flash drive - hot dog
+7,-5442.0,1031,USB food flash drive - pizza slice
+8,-5333.0,1016,USB food flash drive - dim sum 10 drive variety pack
+9,-5603.0,1063,USB food flash drive - banana
+10,-5658.0,1069,USB food flash drive - chocolate bar
+11,-5660.0,1042,USB food flash drive - cookie
+12,-5850.0,1090,USB food flash drive - donut
+13,-6105.0,1118,USB food flash drive - shrimp cocktail
+14,-5730.0,1073,USB food flash drive - fortune cookie
+15,-5690.0,1067,USB food flash drive - dessert 10 drive variety pack
+16,-6108.0,1097,DBA joke mug - mind if I join you? (White)
+17,-5369.0,1013,DBA joke mug - mind if I join you? (Black)
+18,-5968.0,1073,DBA joke mug - daaaaaa-ta (White)
+19,-5688.0,1058,DBA joke mug - daaaaaa-ta (Black)
+20,-5698.0,1067,DBA joke mug - you might be a DBA if (White)
+21,-5818.0,1075,DBA joke mug - you might be a DBA if (Black)
+22,-5880.0,1086,DBA joke mug - it depends (White)
+23,-5797.0,1023,DBA joke mug - it depends (Black)
+24,-5564.0,1048,DBA joke mug - I will get you in order (White)
+25,-5801.0,1067,DBA joke mug - I will get you in order (Black)
+26,-5764.0,1060,DBA joke mug - SELECT caffeine FROM mug (White)
+27,-5442.0,1037,DBA joke mug - SELECT caffeine FROM mug (Black)
+28,-6033.0,1103,DBA joke mug - two types of DBAs (White)
+29,-5725.0,1046,DBA joke mug - two types of DBAs (Black)
+30,-5691.0,1029,Developer joke mug - Oct 31 = Dec 25 (White)
+31,-5772.0,1054,Developer joke mug - Oct 31 = Dec 25 (Black)
+32,-6059.0,1096,Developer joke mug - that's a hardware problem (White)
+33,-5924.0,1081,Developer joke mug - that's a hardware problem (Black)
+34,-6040.0,1102,Developer joke mug - fun was unexpected at this time (White)
+35,-6046.0,1100,Developer joke mug - fun was unexpected at this time (Black)
+36,-5797.0,1080,Developer joke mug - when your hammer is C++ (White)
+37,-5526.0,1020,Developer joke mug - when your hammer is C++ (Black)
+38,-5581.0,1043,Developer joke mug - inheritance is the OO way to become wealthy (White)
+39,-6076.0,1089,Developer joke mug - inheritance is the OO way to become wealthy (Black)
+40,-6011.0,1090,"Developer joke mug - (hip, hip, array) (White)"
+41,-5700.0,1056,"Developer joke mug - (hip, hip, array) (Black)"
+42,-5927.0,1078,Developer joke mug - understanding recursion requires understanding recursion (White)
+43,-5526.0,1057,Developer joke mug - understanding recursion requires understanding recursion (Black)
+44,-5912.0,1074,Developer joke mug - there are 10 types of people in the world (White)
+45,-5583.0,1050,Developer joke mug - there are 10 types of people in the world (Black)
+46,-5588.0,1035,Developer joke mug - a foo walks into a bar (White)
+47,-5780.0,1068,Developer joke mug - a foo walks into a bar (Black)
+48,-6011.0,1102,Developer joke mug - this code was generated by a tool (White)
+49,-5589.0,1028,Developer joke mug - this code was generated by a tool (Black)
+50,-5832.0,1075,Developer joke mug - old C developers never die (White)
+51,-5545.0,1036,Developer joke mug - old C developers never die (Black)
+52,-5662.0,1043,IT joke mug - keyboard not found . press F1 to continue (White)
+53,-5675.0,1036,IT joke mug - keyboard not found . press F1 to continue (Black)
+54,-5598.0,1030,IT joke mug - that behavior is by design (White)
+55,-5842.0,1073,IT joke mug - that behavior is by design (Black)
+56,-5749.0,1068,IT joke mug - hardware: part of the computer that can be kicked (White)
+57,-5880.0,1086,IT joke mug - hardware: part of the computer that can be kicked (Black)
+58,-5801.0,1080,RC toy sedan car with remote control (Black) 1/50 scale
+59,-5424.0,1001,RC toy sedan car with remote control (Red) 1/50 scale
+60,-5697.0,1040,RC toy sedan car with remote control (Blue) 1/50 scale
+61,-5786.0,1084,RC toy sedan car with remote control (Green) 1/50 scale
+62,-5611.0,1035,RC toy sedan car with remote control (Yellow) 1/50 scale
+63,-5488.0,1000,RC toy sedan car with remote control (Pink) 1/50 scale
+64,-5854.0,1073,RC vintage American toy coupe with remote control (Red) 1/50 scale
+65,-5836.0,1094,RC vintage American toy coupe with remote control (Black) 1/50 scale
+66,-5591.0,1066,RC big wheel monster truck with remote control (Black) 1/50 scale
+67,-5640.0,1046,Ride on toy sedan car (Black) 1/12 scale
+68,-5741.0,1033,Ride on toy sedan car (Red) 1/12 scale
+69,-5831.0,1070,Ride on toy sedan car (Blue) 1/12 scale
+70,-5600.0,1043,Ride on toy sedan car (Green) 1/12 scale
+71,-5802.0,1064,Ride on toy sedan car (Yellow) 1/12 scale
+72,-5806.0,1058,Ride on toy sedan car (Pink) 1/12 scale
+73,-5603.0,1021,Ride on vintage American toy coupe (Red) 1/12 scale
+74,-6071.0,1105,Ride on vintage American toy coupe (Black) 1/12 scale
+75,-5727.0,1045,Ride on big wheel monster truck (Black) 1/12 scale
+76,-68796.0,1041,The Gu red shirt XML tag t-shirt (White) 3XS
+77,17338224.0,1532,The Gu red shirt XML tag t-shirt (White) XXS
+78,18686148.0,1521,The Gu red shirt XML tag t-shirt (White) XS
+79,-74232.0,1100,The Gu red shirt XML tag t-shirt (White) S
+80,8590812.0,1767,The Gu red shirt XML tag t-shirt (White) M
+81,-67116.0,1028,The Gu red shirt XML tag t-shirt (White) L
+82,-67648.0,1018,The Gu red shirt XML tag t-shirt (White) XL
+83,-71688.0,1082,The Gu red shirt XML tag t-shirt (White) XXL
+84,-69096.0,1068,The Gu red shirt XML tag t-shirt (White) 3XL
+85,-67992.0,1058,The Gu red shirt XML tag t-shirt (White) 4XL
+86,18078336.0,1544,The Gu red shirt XML tag t-shirt (White) 5XL
+87,-70524.0,1065,The Gu red shirt XML tag t-shirt (White) 6XL
+88,-75228.0,1111,The Gu red shirt XML tag t-shirt (White) 7XL
+89,-67356.0,1025,The Gu red shirt XML tag t-shirt (Black) 3XS
+90,-73032.0,1086,The Gu red shirt XML tag t-shirt (Black) XXS
+91,-72312.0,1096,The Gu red shirt XML tag t-shirt (Black) XS
+92,-66804.0,1015,The Gu red shirt XML tag t-shirt (Black) S
+93,-69024.0,1061,The Gu red shirt XML tag t-shirt (Black) M
+94,-66324.0,984,The Gu red shirt XML tag t-shirt (Black) L
+95,9200760.0,1752,The Gu red shirt XML tag t-shirt (Black) XL
+96,-68388.0,1037,The Gu red shirt XML tag t-shirt (Black) XXL
+97,-68964.0,1038,The Gu red shirt XML tag t-shirt (Black) 3XL
+98,18837585.0,1514,The Gu red shirt XML tag t-shirt (Black) 4XL
+99,-65628.0,1017,The Gu red shirt XML tag t-shirt (Black) 5XL
+100,-69912.0,1049,The Gu red shirt XML tag t-shirt (Black) 6XL
+101,-72576.0,1099,The Gu red shirt XML tag t-shirt (Black) 7XL
+102,-5722.0,1043,Alien officer hoodie (Black) XL
+103,-5574.0,1028,Alien officer hoodie (Black) XXL
+104,-6111.0,1124,Alien officer hoodie (Black) 3XL
+105,-5703.0,1026,Alien officer hoodie (Black) 4XL
+106,-5541.0,1010,Alien officer hoodie (Black) 5XL
+107,-5690.0,1062,Superhero action jacket (Blue) 3XS
+108,-6033.0,1084,Superhero action jacket (Blue) XXS
+109,-6069.0,1081,Superhero action jacket (Blue) XS
+110,-5414.0,1006,Superhero action jacket (Blue) S
+111,-6007.0,1072,Superhero action jacket (Blue) M
+112,-5456.0,1028,Superhero action jacket (Blue) L
+113,-5364.0,997,Superhero action jacket (Blue) XL
+114,-5398.0,1038,Superhero action jacket (Blue) XXL
+115,-5868.0,1043,Superhero action jacket (Blue) 3XL
+116,-5538.0,1006,Superhero action jacket (Blue) 4XL
+117,-5833.0,1077,Superhero action jacket (Blue) 5XL
+118,-5811.0,1060,Dinosaur battery-powered slippers (Green) S
+119,-5996.0,1076,Dinosaur battery-powered slippers (Green) M
+120,-6091.0,1124,Dinosaur battery-powered slippers (Green) L
+121,-5969.0,1055,Dinosaur battery-powered slippers (Green) XL
+122,-5902.0,1071,Ogre battery-powered slippers (Green) S
+123,-5925.0,1060,Ogre battery-powered slippers (Green) M
+124,-5910.0,1069,Ogre battery-powered slippers (Green) L
+125,-5835.0,1067,Ogre battery-powered slippers (Green) XL
+126,-5624.0,1035,Plush shark slippers (Gray) S
+127,-5679.0,1030,Plush shark slippers (Gray) M
+128,-5573.0,1020,Plush shark slippers (Gray) L
+129,-5787.0,1061,Plush shark slippers (Gray) XL
+130,-5784.0,1052,Furry gorilla with big eyes slippers (Black) S
+131,-5777.0,1048,Furry gorilla with big eyes slippers (Black) M
+132,-5915.0,1075,Furry gorilla with big eyes slippers (Black) L
+133,-5752.0,1036,Furry gorilla with big eyes slippers (Black) XL
+134,-5631.0,1053,Animal with big feet slippers (Brown) S
+135,-5601.0,1032,Animal with big feet slippers (Brown) M
+136,-5763.0,1057,Animal with big feet slippers (Brown) L
+137,-6023.0,1109,Animal with big feet slippers (Brown) XL
+138,-69600.0,1043,Furry animal socks (Pink) S
+139,-71364.0,1081,Furry animal socks (Pink) M
+140,-68016.0,1039,Furry animal socks (Pink) L
+141,-69132.0,1053,Furry animal socks (Pink) XL
+142,-70821.0,1046,Halloween zombie mask (Light Brown) S
+143,-66792.0,1018,Halloween zombie mask (Light Brown) M
+144,-63892.0,984,Halloween zombie mask (Light Brown) L
+145,-72216.0,1072,Halloween zombie mask (Light Brown) XL
+146,-70224.0,1077,Halloween skull mask (Gray) S
+147,-67836.0,1043,Halloween skull mask (Gray) M
+148,-73728.0,1100,Halloween skull mask (Gray) L
+149,-68532.0,1036,Halloween skull mask (Gray) XL
+150,-5541.0,1031,Pack of 12 action figures (variety)
+151,-5617.0,1027,Pack of 12 action figures (male)
+152,-5980.0,1075,Pack of 12 action figures (female)
+153,-57790.0,1062,Small sized bubblewrap roll 10m
+154,-59760.0,1097,Medium sized bubblewrap roll 20m
+155,-53790.0,1004,Large sized bubblewrap roll 50m
+156,-54850.0,985,10 mm Double sided bubble wrap 10m
+157,-55760.0,1013,10 mm Double sided bubble wrap 20m
+158,-56564.0,1037,10 mm Double sided bubble wrap 50m
+159,-54190.0,1004,20 mm Double sided bubble wrap 10m
+160,-59006.0,1112,20 mm Double sided bubble wrap 20m
+161,-57340.0,1061,20 mm Double sided bubble wrap 50m
+162,-61120.0,1090,32 mm Double sided bubble wrap 10m
+163,-57450.0,1049,32 mm Double sided bubble wrap 20m
+164,-55210.0,1005,32 mm Double sided bubble wrap 50m
+165,-60880.0,1105,10 mm Anti static bubble wrap (Blue) 10m
+166,-57170.0,1062,10 mm Anti static bubble wrap (Blue) 20m
+167,-63750.0,1120,10 mm Anti static bubble wrap (Blue) 50m
+168,-52520.0,973,20 mm Anti static bubble wrap (Blue) 10m
+169,-54797.0,996,20 mm Anti static bubble wrap (Blue) 20m
+170,-56660.0,1034,20 mm Anti static bubble wrap (Blue) 50m
+171,-58030.0,1049,32 mm Anti static bubble wrap (Blue) 10m
+172,-60250.0,1089,32 mm Anti static bubble wrap (Blue) 20m
+173,-60720.0,1086,32 mm Anti static bubble wrap (Blue) 50m
+174,-5494.0,1020,Bubblewrap dispenser (Black) 1.5m
+175,-5474.0,1021,Bubblewrap dispenser (Blue) 1.5m
+176,-6085.0,1101,Bubblewrap dispenser (Red) 1.5m
+177,-147250.0,1063,Shipping carton (Brown) 413x285x187mm
+178,-140897.0,1052,Shipping carton (Brown) 500x310x310mm
+179,-146201.0,1067,Shipping carton (Brown) 229x229x229mm
+180,-143400.0,1037,Shipping carton (Brown) 279x254x217mm
+181,-142425.0,1052,Shipping carton (Brown) 356x229x229mm
+182,-139350.0,1020,Shipping carton (Brown) 457x279x279mm
+183,-144676.0,1055,Shipping carton (Brown) 480x270x320mm
+184,11279700.0,1457,Shipping carton (Brown) 305x305x305mm
+185,-151700.0,1075,Shipping carton (Brown) 356x356x279mm
+186,-144675.0,1072,Shipping carton (Brown) 457x457x457mm
+187,-149250.0,1066,Express post box 5kg (White) 350x280x130mm
+188,-152200.0,1078,3 kg Courier post bag (White) 300x190x95mm
+189,-158288.0,1094,Clear packaging tape 48mmx75m
+190,-114420.0,1032,Clear packaging tape 48mmx100m
+191,-206892.0,1041,Black and orange fragile despatch tape 48mmx75m
+192,-193284.0,978,Black and orange fragile despatch tape 48mmx100m
+193,25010688.0,1529,Black and orange glass with care despatch tape 48mmx75m
+194,-142464.0,1075,Black and orange glass with care despatch tape  48mmx100m
+195,-138960.0,1057,Black and orange handle with care despatch tape  48mmx75m
+196,-137496.0,1032,Black and orange handle with care despatch tape  48mmx100m
+197,-133992.0,1037,Black and orange this way up despatch tape 48mmx75m
+198,-143688.0,1081,Black and orange this way up despatch tape  48mmx100m
+199,-141864.0,1078,Black and yellow heavy despatch tape  48mmx75m
+200,-141888.0,1084,Black and yellow heavy despatch tape 48mmx100m
+201,-143160.0,1064,Red and white urgent despatch tape 48mmx75m
+202,-129910.0,1000,Red and white urgent  heavy despatch tape  48mmx100m
+203,-57606.0,1042,Tape dispenser (Black)
+204,11992016.0,1548,Tape dispenser (Red)
+205,-57815.0,1040,Tape dispenser (Blue)
+206,-65940.0,995,Permanent marker black 5mm nib (Black) 5mm
+207,-71772.0,1067,Permanent marker blue 5mm nib (Blue) 5mm
+208,-68988.0,1041,Permanent marker red 5mm nib (Red) 5mm
+209,-30285.0,1102,Packing knife with metal insert blade (Yellow) 9mm
+210,-26955.0,996,Packing knife with metal insert blade (Yellow) 18mm
+211,-56890.0,1049,Small 9mm replacement blades 9mm
+212,-60510.0,1076,Large  replacement blades 18mm
+213,-5962.0,1085,Air cushion film 200mmx100mm 325m
+214,-6086.0,1095,Air cushion film 200mmx200mm 325m
+215,-5831.0,1063,Air cushion machine (Blue)
+216,-55270.0,1039,Void fill 100 L bag (White) 100L
+217,-56330.0,1040,Void fill 200 L bag (White) 200L
+218,-57150.0,1038,Void fill 300 L bag (White) 300L
+219,-57350.0,1040,Void fill 400 L bag (White) 400L
+220,-16704.0,135,Novelty chilli chocolates 250g
+221,-8784.0,131,Novelty chilli chocolates 500g
+222,-19440.0,149,Chocolate beetles 250g
+223,-14760.0,117,Chocolate echidnas 250g
+224,-14640.0,118,Chocolate frogs 250g
+225,-15288.0,127,Chocolate sharks 250g
+226,-17688.0,151,White chocolate snow balls 250g
+227,-14976.0,118,White chocolate moon rocks 250g
