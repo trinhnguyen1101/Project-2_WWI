@@ -1,0 +1,70 @@
+table_name,column_name,parsed_rows,parse_success_pct,min_date,max_date
+Application_Cities,ValidFrom,37940,1.0,2013-01-01 00:00:00,2015-07-01 16:00:00.000000000
+Application_Cities_Archive,ValidFrom,28,1.0,2013-01-01 00:00:00,2013-01-01 00:00:00.000000000
+Application_Cities_Archive,ValidTo,28,1.0,2013-07-01 16:00:00,2015-07-01 16:00:00.000000000
+Application_Countries,ValidFrom,190,1.0,2013-01-01 00:00:00,2022-10-07 21:11:44.893009300
+Application_Countries_Archive,ValidFrom,37,1.0,2013-01-01 00:00:00,2013-07-01 16:00:00.000000000
+Application_Countries_Archive,ValidTo,37,1.0,2013-07-01 16:00:00,2022-10-07 21:11:44.893009300
+Application_DeliveryMethods,ValidFrom,10,1.0,2013-01-01 00:00:00,2015-01-01 16:00:00.000000000
+Application_DeliveryMethods_Archive,ValidFrom,1,1.0,2013-01-01 00:00:00,2013-01-01 00:00:00.000000000
+Application_DeliveryMethods_Archive,ValidTo,1,1.0,2015-01-01 16:00:00,2015-01-01 16:00:00.000000000
+Application_PaymentMethods,ValidFrom,4,1.0,2013-01-01 00:00:00,2016-01-01 16:00:00.000000000
+Application_PaymentMethods_Archive,ValidFrom,1,1.0,2013-01-01 00:00:00,2013-01-01 00:00:00.000000000
+Application_PaymentMethods_Archive,ValidTo,1,1.0,2016-01-01 16:00:00,2016-01-01 16:00:00.000000000
+Application_StateProvinces,ValidFrom,53,1.0,2013-01-01 00:00:00,2015-07-01 16:00:00.000000000
+Application_StateProvinces_Archive,ValidFrom,104,1.0,2013-01-01 00:00:00,2015-07-01 16:00:00.000000000
+Application_StateProvinces_Archive,ValidTo,104,1.0,2013-01-01 00:01:00,2015-07-01 16:00:00.000000000
+Application_TransactionTypes,ValidFrom,13,1.0,2013-01-01 00:00:00,2016-01-01 16:05:00.000000000
+Application_TransactionTypes_Archive,ValidFrom,1,1.0,2016-01-01 16:00:00,2016-01-01 16:00:00.000000000
+Application_TransactionTypes_Archive,ValidTo,1,1.0,2016-01-01 16:05:00,2016-01-01 16:05:00.000000000
+Purchasing_PurchaseOrders,ExpectedDeliveryDate,2074,1.0,2013-01-15 00:00:00,2016-06-20 00:00:00.000000000
+Purchasing_PurchaseOrders,LastEditedWhen,2074,1.0,2013-01-02 07:00:00,2016-05-31 13:00:00.000000000
+Purchasing_PurchaseOrders,OrderDate,2074,1.0,2013-01-01 00:00:00,2016-05-31 00:00:00.000000000
+Purchasing_SupplierCategories,ValidFrom,9,1.0,2013-01-01 00:00:00,2015-01-01 16:00:00.000000000
+Purchasing_SupplierCategories_Archive,ValidFrom,1,1.0,2013-01-01 00:00:00,2013-01-01 00:00:00.000000000
+Purchasing_SupplierCategories_Archive,ValidTo,1,1.0,2015-01-01 16:00:00,2015-01-01 16:00:00.000000000
+Purchasing_SupplierTransactions,FinalizationDate,2436,0.9991796554552912,2013-01-07 00:00:00,2016-05-30 00:00:00.000000000
+Purchasing_SupplierTransactions,LastEditedWhen,2438,1.0,2013-01-07 09:00:00,2016-05-31 07:00:00.000000000
+Purchasing_SupplierTransactions,TransactionDate,2438,1.0,2013-01-02 00:00:00,2016-05-31 00:00:00.000000000
+Sales_BuyingGroups,ValidFrom,2,1.0,2013-01-01 00:00:00,2013-01-01 00:00:00.000000000
+Sales_BuyingGroups_Archive,ValidFrom,0,,,
+Sales_BuyingGroups_Archive,ValidTo,0,,,
+Sales_CustomerCategories,ValidFrom,8,1.0,2013-01-01 00:00:00,2014-01-01 16:15:00.000000000
+Sales_CustomerCategories_Archive,ValidFrom,1,1.0,2014-01-01 16:00:00,2014-01-01 16:00:00.000000000
+Sales_CustomerCategories_Archive,ValidTo,1,1.0,2014-01-01 16:15:00,2014-01-01 16:15:00.000000000
+Sales_CustomerTransactions,FinalizationDate,97063,0.999135330993237,2013-01-02 00:00:00,2016-05-31 00:00:00.000000000
+Sales_CustomerTransactions,LastEditedWhen,97147,1.0,2013-01-02 11:30:00,2016-05-31 12:00:00.000000000
+Sales_CustomerTransactions,TransactionDate,97147,1.0,2013-01-01 00:00:00,2016-05-31 00:00:00.000000000
+Sales_Customers_Archive,AccountOpenedDate,51,1.0,2013-01-01 00:00:00,2015-06-12 00:00:00.000000000
+Sales_Customers_Archive,DeliveryRun,0,0.0,,
+Sales_Customers_Archive,ValidFrom,51,1.0,2013-01-01 00:00:00,2015-06-12 00:00:00.000000000
+Sales_Customers_Archive,ValidTo,51,1.0,2013-07-01 16:00:00,2015-07-01 16:00:00.000000000
+Sales_Invoices,ConfirmedDeliveryTime,70426,0.998808679619912,2013-01-02 07:05:00,2016-05-31 13:30:00.000000000
+Sales_Invoices,DeliveryMethodID,0,0.0,,
+Sales_Invoices,LastEditedWhen,70426,0.998808679619912,2013-01-02 07:00:00,2016-05-31 07:00:00.000000000
+Sales_Orders,DeliveryInstructions,0,0.0,,
+Sales_Orders,ExpectedDeliveryDate,73595,1.0,2013-01-02 00:00:00,2016-06-01 00:00:00.000000000
+Sales_Orders,LastEditedWhen,73595,1.0,2013-01-01 11:00:00,2016-05-31 12:00:00.000000000
+Sales_Orders,OrderDate,73595,1.0,2013-01-01 00:00:00,2016-05-31 00:00:00.000000000
+Sales_Orders,PickingCompletedWhen,70510,0.9580813913988722,2013-01-01 11:00:00,2016-05-31 12:00:00.000000000
+Sales_SpecialDeals,EndDate,2,1.0,2016-03-31 00:00:00,2016-06-30 00:00:00.000000000
+Sales_SpecialDeals,LastEditedWhen,2,1.0,2015-12-31 16:00:00,2015-12-31 16:00:00.000000000
+Sales_SpecialDeals,StartDate,2,1.0,2016-01-01 00:00:00,2016-04-01 00:00:00.000000000
+Warehouse_ColdRoomTemperatures,RecordedWhen,4,1.0,2016-05-31 23:59:24,2016-05-31 23:59:24.000000000
+Warehouse_ColdRoomTemperatures,ValidFrom,4,1.0,2016-05-31 23:59:24,2016-05-31 23:59:24.000000000
+Warehouse_ColdRoomTemperatures_Archive,RecordedWhen,3654736,1.0,2015-12-20 00:00:00,2016-05-31 23:59:00.000000000
+Warehouse_ColdRoomTemperatures_Archive,ValidFrom,3654736,1.0,2015-12-20 00:00:00,2016-05-31 23:59:00.000000000
+Warehouse_ColdRoomTemperatures_Archive,ValidTo,3654736,1.0,2015-12-20 00:00:27,2016-05-31 23:59:24.000000000
+Warehouse_Colors,ValidFrom,36,1.0,2013-01-01 00:00:00,2016-01-01 16:00:00.000000000
+Warehouse_Colors_Archive,ValidFrom,1,1.0,2013-01-01 00:00:00,2013-01-01 00:00:00.000000000
+Warehouse_Colors_Archive,ValidTo,1,1.0,2016-01-01 16:00:00,2016-01-01 16:00:00.000000000
+Warehouse_PackageTypes,ValidFrom,14,1.0,2013-01-01 00:00:00,2013-01-01 00:00:00.000000000
+Warehouse_PackageTypes_Archive,ValidFrom,0,,,
+Warehouse_PackageTypes_Archive,ValidTo,0,,,
+Warehouse_StockGroups,ValidFrom,10,1.0,2013-01-01 00:00:00,2016-01-01 16:00:00.000000000
+Warehouse_StockGroups_Archive,ValidFrom,1,1.0,2013-01-01 00:00:00,2013-01-01 00:00:00.000000000
+Warehouse_StockGroups_Archive,ValidTo,1,1.0,2016-01-01 16:00:00,2016-01-01 16:00:00.000000000
+Warehouse_StockItemHoldings,LastEditedWhen,227,1.0,2016-05-31 07:00:00,2016-05-31 12:00:00.000000000
+Warehouse_StockItemStockGroups,LastEditedWhen,442,1.0,2013-01-01 00:00:00,2016-01-05 00:00:00.000000000
+Warehouse_StockItemTransactions,LastEditedWhen,236667,1.0,2013-01-01 12:00:00,2016-05-31 12:00:00.000000000
+Warehouse_StockItemTransactions,TransactionOccurredWhen,236667,1.0,2013-01-01 12:00:00,2016-05-31 12:00:00.000000000

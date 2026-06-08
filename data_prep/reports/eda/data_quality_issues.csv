@@ -1,0 +1,53 @@
+severity,area,issue
+high,load,"Application_People.csv failed to load: ParserError('Error tokenizing data. C error: Expected 26 fields in line 3, saw 34\n')"
+high,load,"Application_People_Archive.csv failed to load: ParserError('Error tokenizing data. C error: Expected 25 fields in line 944, saw 29\n')"
+high,load,"Purchasing_PurchaseOrderLines.csv failed to load: ParserError('Error tokenizing data. C error: Expected 12 fields in line 47, saw 14\n')"
+high,load,"Purchasing_Suppliers.csv failed to load: ParserError('Error tokenizing data. C error: Expected 29 fields in line 3, saw 30\n')"
+high,load,"Purchasing_Suppliers_Archive.csv failed to load: ParserError('Error tokenizing data. C error: Expected 29 fields in line 5, saw 30\n')"
+high,load,"Sales_Customers.csv failed to load: ParserError('Error tokenizing data. C error: Expected 31 fields in line 3, saw 32\n')"
+high,load,"Sales_InvoiceLines.csv failed to load: ParserError('Error tokenizing data. C error: Expected 13 fields in line 13, saw 15\n')"
+high,load,"Sales_OrderLines.csv failed to load: ParserError('Error tokenizing data. C error: Expected 12 fields in line 21, saw 14\n')"
+high,load,"Warehouse_StockItems.csv failed to load: ParserError('Error tokenizing data. C error: Expected 26 fields in line 5, saw 28\n')"
+high,load,"Warehouse_StockItems_Archive.csv failed to load: ParserError('Error tokenizing data. C error: Expected 25 fields in line 180, saw 29\n')"
+medium,duplicates,Application_SystemParameters has 41 duplicate full rows
+high,keys,"Application_StateProvinces_Archive key review: null rows=0, duplicate key rows=4"
+high,keys,"Sales_Invoices key review: null rows=70510, duplicate key rows=70510"
+high,keys,"Warehouse_VehicleTemperatures key review: null rows=0, duplicate key rows=10"
+high,relationships,"Sales_Invoices.OrderID has 70,510.0 orphan rows against Sales_Orders.OrderID"
+medium,missing,Sales_Invoices.DeliveryMethodID is 100.0% missing
+medium,missing,Sales_Orders.Comments is 100.0% missing
+medium,missing,Sales_Customers_Archive.DeliveryRun is 100.0% missing
+medium,missing,Sales_Customers_Archive.RunPosition is 100.0% missing
+medium,missing,Sales_Invoices.InvoiceID is 100.0% missing
+medium,missing,Sales_Invoices.CustomerID is 100.0% missing
+medium,missing,Sales_Invoices.SalespersonPersonID is 100.0% missing
+medium,missing,Sales_Invoices.PackedByPersonID is 100.0% missing
+medium,missing,Sales_Orders.DeliveryInstructions is 100.0% missing
+medium,missing,Sales_Customers_Archive.BuyingGroupID is 100.0% missing
+medium,missing,Sales_Orders.InternalComments is 100.0% missing
+medium,missing,Sales_SpecialDeals.StockItemID is 100.0% missing
+medium,missing,Sales_SpecialDeals.CustomerID is 100.0% missing
+medium,missing,Sales_SpecialDeals.CustomerCategoryID is 100.0% missing
+medium,missing,Sales_SpecialDeals.DiscountAmount is 100.0% missing
+medium,missing,Sales_SpecialDeals.UnitPrice is 100.0% missing
+medium,missing,Sales_Customers_Archive.AlternateContactPersonID is 100.0% missing
+medium,missing,Warehouse_VehicleTemperatures.CompressedSensorData is 100.0% missing
+medium,missing,Purchasing_PurchaseOrders.InternalComments is 100.0% missing
+medium,missing,Purchasing_PurchaseOrders.Comments is 100.0% missing
+medium,missing,Application_SystemParameters.LastEditedWhen is 100.0% missing
+medium,missing,Application_SystemParameters.LastEditedBy is 100.0% missing
+medium,missing,Application_SystemParameters.PostalPostalCode is 99.3% missing
+medium,missing,Application_SystemParameters.PostalCityID is 99.3% missing
+medium,missing,Application_SystemParameters.DeliveryLocation is 99.3% missing
+medium,missing,Application_SystemParameters.DeliveryPostalCode is 99.3% missing
+medium,missing,Application_SystemParameters.DeliveryCityID is 99.3% missing
+medium,missing,Application_SystemParameters.PostalAddressLine2 is 99.3% missing
+medium,missing,Application_SystemParameters.PostalAddressLine1 is 99.3% missing
+medium,missing,Application_SystemParameters.ApplicationSettings is 99.3% missing
+medium,missing,Application_SystemParameters.DeliveryAddressLine2 is 98.6% missing
+medium,missing,Application_SystemParameters.DeliveryAddressLine1 is 96.6% missing
+medium,missing,Warehouse_StockItemTransactions.SupplierID is 96.5% missing
+medium,missing,Warehouse_StockItemTransactions.PurchaseOrderID is 96.5% missing
+medium,missing,Sales_Orders.BackorderOrderID is 89.8% missing
+medium,missing,Sales_CustomerTransactions.PaymentMethodID is 72.6% missing
+medium,missing,Application_StateProvinces_Archive.Border is 50.0% missing
