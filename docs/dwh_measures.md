@@ -21,6 +21,29 @@ Các phân tích tồn kho như inventory movement, inventory snapshot, reorder 
 - SCD Type 2 không được cài trong DDL hiện tại. Nếu cần lưu lịch sử thuộc tính, xử lý ở giai đoạn ETL rồi mở rộng dimension sau.
 - Các bảng `_Archive` chưa cần dùng trong scope hiện tại, trừ khi ETL được mở rộng để nạp SCD.
 
+## Dimension Catalog
+
+| Dimension | Ý nghĩa | Dùng để phân tích |
+|---|---|---|
+| `dim_date` | Lịch phân tích chuẩn theo ngày, tháng, quý, năm, thứ trong tuần | Xu hướng doanh thu/lợi nhuận theo thời gian, mùa vụ, so sánh tháng/quý/năm |
+| `dim_country` | Quốc gia của thành phố/tỉnh bang | Doanh thu, lợi nhuận và khách hàng theo quốc gia, vùng địa lý lớn |
+| `dim_state_province` | Tỉnh/bang, thuộc một quốc gia | Phân tích doanh thu/lợi nhuận theo khu vực trung gian như state, province, sales territory |
+| `dim_city` | Thành phố giao hàng hoặc địa chỉ khách hàng/supplier | Phân tích khu vực nào bán tốt, khu vực nào margin thấp, phân bố khách hàng theo địa lý |
+| `dim_customer_category` | Loại khách hàng, ví dụ nhóm bán lẻ, đại lý, khách doanh nghiệp | So sánh doanh thu, lợi nhuận, AOV, ngày thu tiền theo loại khách hàng |
+| `dim_buying_group` | Nhóm mua hàng mà khách hàng thuộc về | Đánh giá hiệu quả bán hàng theo buying group, tìm nhóm khách hàng đóng góp lợi nhuận cao |
+| `dim_delivery_method` | Phương thức giao hàng | Phân tích hiệu quả fulfill theo phương thức giao hàng, so sánh nhóm đơn giao bằng các hình thức khác nhau |
+| `dim_payment_method` | Phương thức thanh toán | Phân tích chất lượng thu tiền, outstanding ratio và days to collect theo phương thức thanh toán |
+| `dim_transaction_type` | Loại giao dịch công nợ hoặc tồn tại trong hệ thống nguồn | Phân loại giao dịch customer transaction, tách invoice/payment/credit theo loại nghiệp vụ |
+| `dim_package_type` | Kiểu đóng gói của sản phẩm hoặc dòng bán hàng | Phân tích quantity, revenue, fulfillment theo kiểu package |
+| `dim_stock_group` | Nhóm hàng/sản phẩm | So sánh doanh thu, lợi nhuận, margin và fill rate theo nhóm sản phẩm |
+| `dim_person` | Nhân sự liên quan như salesperson, picker, contact person | Phân tích doanh thu theo salesperson, hiệu quả picking theo picker nếu dữ liệu đủ |
+| `dim_supplier` | Nhà cung cấp của sản phẩm | Đánh giá supplier nào tạo nhiều doanh thu/lợi nhuận thông qua sản phẩm họ cung cấp |
+| `dim_customer` | Khách hàng mua hàng, kèm thuộc tính tín dụng và thanh toán | Phân tích khách hàng có giá trị cao, margin tốt, trả chậm, credit hold, payment days |
+| `dim_product` | Sản phẩm bán ra, kèm supplier, package, giá hiện tại, lead time, tag | Phân tích sản phẩm bán chạy, sản phẩm lợi nhuận cao/thấp, sản phẩm có fill rate thấp |
+| `bridge_product_stock_group` | Bảng nối nhiều-nhiều giữa sản phẩm và nhóm hàng | Cho phép một sản phẩm thuộc nhiều stock group, phục vụ roll-up doanh thu/lợi nhuận theo nhóm hàng |
+
+Dimension quan trọng nhất cho scope hiện tại là `dim_date`, `dim_customer`, `dim_product`, `dim_city`, `dim_customer_category`, `dim_buying_group`, `dim_supplier` và `dim_stock_group`. Các dimension còn lại hỗ trợ phân tích sâu hơn về fulfillment, thanh toán và phân loại giao dịch.
+
 ## Fact Sales Invoice Line
 
 Grain: một dòng hóa đơn bán hàng, tương ứng `Sales.InvoiceLines`.
