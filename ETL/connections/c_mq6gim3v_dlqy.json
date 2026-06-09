@@ -1,0 +1,7 @@
+{
+  "kind": "postgres",
+  "host": "localhost",
+  "port": 5432,
+  "database": "dwh",
+  "username": "postgres"
+}

@@ -1,0 +1,100 @@
+[
+  {
+    "at": "2026-06-09T09:48:51.528193300+00:00",
+    "status": "error",
+    "duration_ms": 0,
+    "rows": 0,
+    "node_count": 0,
+    "trigger": "manual",
+    "error": "config: PostgreSQL (src.postgres / n_mq6gjao4_6x9t7): src.postgres: table name is required"
+  },
+  {
+    "at": "2026-06-09T09:49:15.358346100+00:00",
+    "status": "error",
+    "duration_ms": 813,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "PostgreSQL: query: Catalog Error: Table with name \"stg_application_countries.stg_application_countries\" does not exist because schema \"stg_application_countries\" does not exist.\r\n\r\nLINE 1: ...tries\") TO 'C:/Users/TRINHN~1/AppData/Local/Temp/duckle_run_2384_1780998554544362100_2.duckdb.attsrc-n_mq6gjao4_6x9t7...\r\n                                                                      ^"
+  },
+  {
+    "at": "2026-06-09T09:49:25.145744900+00:00",
+    "status": "error",
+    "duration_ms": 208,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "PostgreSQL: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"country_id\", \"country_name\", \"formal_name\", \"iso_alpha3_code\", \"iso_numeric_code\", \"country_type\", \"latest_recorded_population\", \"continent\", \"region\", \"subregion\", \"border\", \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\".\"stg_application_countries\" ) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ..., \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T09:51:49.056830300+00:00",
+    "status": "error",
+    "duration_ms": 207,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "PostgreSQL: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"country_id\", \"country_name\", \"formal_name\", \"iso_alpha3_code\", \"iso_numeric_code\", \"country_type\", \"latest_recorded_population\", \"continent\", \"region\", \"subregion\", \"border\", \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\".\"stg_application_countries\" ) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ..., \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T09:52:21.370197500+00:00",
+    "status": "error",
+    "duration_ms": 247,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "PostgreSQL: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"country_id\", \"country_name\", \"formal_name\", \"iso_alpha3_code\", \"iso_numeric_code\", \"country_type\", \"latest_recorded_population\", \"continent\", \"region\", \"subregion\", \"border\", \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\".\"stg_application_countries\" ) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ..., \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T09:52:58.366553400+00:00",
+    "status": "error",
+    "duration_ms": 248,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "PostgreSQL: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"country_id\", \"country_name\", \"formal_name\", \"iso_alpha3_code\", \"iso_numeric_code\", \"country_type\", \"latest_recorded_population\", \"continent\", \"region\", \"subregion\", \"border\", \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\".\"stg_application_countries\" ) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ..., \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T09:54:32.172890300+00:00",
+    "status": "error",
+    "duration_ms": 208,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "PostgreSQL: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"country_id\", \"country_name\", \"formal_name\", \"iso_alpha3_code\", \"iso_numeric_code\", \"country_type\", \"latest_recorded_population\", \"continent\", \"region\", \"subregion\", \"border\", \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\".\"stg_application_countries\" ) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ..., \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T09:56:00.327444900+00:00",
+    "status": "error",
+    "duration_ms": 207,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "PostgreSQL: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"country_id\", \"country_name\", \"formal_name\", \"iso_alpha3_code\", \"iso_numeric_code\", \"country_type\", \"latest_recorded_population\", \"continent\", \"region\", \"subregion\", \"border\", \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\".\"stg_application_countries\" ) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ..., \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T09:56:42.317616+00:00",
+    "status": "error",
+    "duration_ms": 248,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "PostgreSQL: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"country_id\", \"country_name\", \"formal_name\", \"iso_alpha3_code\", \"iso_numeric_code\", \"country_type\", \"latest_recorded_population\", \"continent\", \"region\", \"subregion\", \"border\", \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\".\"stg_application_countries\" ) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ..., \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T09:58:31.167328600+00:00",
+    "status": "error",
+    "duration_ms": 87,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "PostgreSQL: query: Parser Error: syntax error at or near \";\"\r\n\r\nLINE 1: ... duckle_src (TYPE POSTGRES, READ_ONLY); COPY ((SELECT 1 AS test;)) TO 'C:/Users/TRINHN~1/AppData/Local/Temp/duckle_run_238...\r\n                                                                          ^"
+  },
+  {
+    "at": "2026-06-09T09:58:53.441013900+00:00",
+    "status": "ok",
+    "duration_ms": 373,
+    "rows": 1,
+    "node_count": 1,
+    "trigger": "manual"
+  }
+]

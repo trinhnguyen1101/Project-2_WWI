@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "engine": "duckdb",
+  "jobs": [
+    {
+      "id": "j1",
+      "name": "orders_etl",
+      "dirty": true
+    }
+  ],
+  "activeJobId": "j1"
+}

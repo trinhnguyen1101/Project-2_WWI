@@ -1,0 +1,55 @@
+[
+  {
+    "id": "root",
+    "name": "Duckle Project",
+    "type": "project"
+  },
+  {
+    "id": "pipelines",
+    "name": "Pipelines",
+    "type": "folder",
+    "parentId": "root"
+  },
+  {
+    "id": "connections",
+    "name": "Connections",
+    "type": "folder",
+    "parentId": "root"
+  },
+  {
+    "id": "contexts",
+    "name": "Contexts",
+    "type": "folder",
+    "parentId": "root"
+  },
+  {
+    "id": "routines",
+    "name": "Routines",
+    "type": "folder",
+    "parentId": "root"
+  },
+  {
+    "id": "docs",
+    "name": "Documentation",
+    "type": "folder",
+    "parentId": "root"
+  },
+  {
+    "id": "j1",
+    "name": "orders_etl",
+    "type": "pipeline",
+    "parentId": "pipelines"
+  },
+  {
+    "id": "c_mq6ghrr3_gmpt",
+    "name": "Staging",
+    "type": "connection",
+    "parentId": "connections"
+  },
+  {
+    "id": "c_mq6gim3v_dlqy",
+    "name": "dwh",
+    "type": "connection",
+    "parentId": "connections"
+  }
+]
