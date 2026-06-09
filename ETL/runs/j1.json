@@ -1,100 +1,451 @@
 [
   {
-    "at": "2026-06-09T09:48:51.528193300+00:00",
+    "at": "2026-06-09T10:48:50.097919100+00:00",
     "status": "error",
     "duration_ms": 0,
     "rows": 0,
     "node_count": 0,
     "trigger": "manual",
-    "error": "config: PostgreSQL (src.postgres / n_mq6gjao4_6x9t7): src.postgres: table name is required"
+    "error": "config: PostgreSQL (src.postgres / n_mq6gjao4_6x9t7): src.postgres: incremental read mode isn't implemented yet"
   },
   {
-    "at": "2026-06-09T09:49:15.358346100+00:00",
+    "at": "2026-06-09T10:49:29.920856800+00:00",
     "status": "error",
-    "duration_ms": 813,
+    "duration_ms": 0,
+    "rows": 0,
+    "node_count": 0,
+    "trigger": "manual",
+    "error": "config: PostgreSQL (src.postgres / n_mq6ipbkx_x6pfe): src.postgres: table name is required"
+  },
+  {
+    "at": "2026-06-09T12:55:42.981247400+00:00",
+    "status": "error",
+    "duration_ms": 779,
     "rows": 0,
     "node_count": 1,
     "trigger": "manual",
-    "error": "PostgreSQL: query: Catalog Error: Table with name \"stg_application_countries.stg_application_countries\" does not exist because schema \"stg_application_countries\" does not exist.\r\n\r\nLINE 1: ...tries\") TO 'C:/Users/TRINHN~1/AppData/Local/Temp/duckle_run_2384_1780998554544362100_2.duckdb.attsrc-n_mq6gjao4_6x9t7...\r\n                                                                      ^"
+    "error": "Source: query: Catalog Error: Table with name \"staging.stg_sales_invoices\" does not exist because schema \"staging\" does not exist.\r\n\r\nLINE 7:     SELECT expected_delivery_date AS d FROM staging.stg_sales_orders\r\n                       ^"
   },
   {
-    "at": "2026-06-09T09:49:25.145744900+00:00",
-    "status": "error",
-    "duration_ms": 208,
-    "rows": 0,
-    "node_count": 1,
-    "trigger": "manual",
-    "error": "PostgreSQL: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"country_id\", \"country_name\", \"formal_name\", \"iso_alpha3_code\", \"iso_numeric_code\", \"country_type\", \"latest_recorded_population\", \"continent\", \"region\", \"subregion\", \"border\", \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\".\"stg_application_countries\" ) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ..., \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\"....\r\n                                                             ^"
-  },
-  {
-    "at": "2026-06-09T09:51:49.056830300+00:00",
+    "at": "2026-06-09T12:57:47.586806400+00:00",
     "status": "error",
     "duration_ms": 207,
     "rows": 0,
     "node_count": 1,
     "trigger": "manual",
-    "error": "PostgreSQL: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"country_id\", \"country_name\", \"formal_name\", \"iso_alpha3_code\", \"iso_numeric_code\", \"country_type\", \"latest_recorded_population\", \"continent\", \"region\", \"subregion\", \"border\", \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\".\"stg_application_countries\" ) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ..., \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\"....\r\n                                                             ^"
+    "error": "Source: query: Catalog Error: Table with name \"staging.stg_sales_invoices\" does not exist because schema \"staging\" does not exist.\r\n\r\nLINE 7:     SELECT expected_delivery_date AS d FROM staging.stg_sales_orders\r\n                       ^"
   },
   {
-    "at": "2026-06-09T09:52:21.370197500+00:00",
+    "at": "2026-06-09T12:58:11.007945600+00:00",
+    "status": "error",
+    "duration_ms": 166,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Catalog Error: Table with name \"staging.stg_sales_invoices\" does not exist because schema \"staging\" does not exist.\r\n\r\nLINE 7:     SELECT expected_delivery_date AS d FROM staging.stg_sales_orders\r\n                       ^"
+  },
+  {
+    "at": "2026-06-09T12:58:38.996355300+00:00",
+    "status": "error",
+    "duration_ms": 167,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Catalog Error: Table with name \"staging.stg_sales_invoices\" does not exist because schema \"staging\" does not exist.\r\n\r\nLINE 7:     SELECT expected_delivery_date AS d FROM staging.stg_sales_orders\r\n                       ^"
+  },
+  {
+    "at": "2026-06-09T12:58:49.917773800+00:00",
+    "status": "error",
+    "duration_ms": 167,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Catalog Error: Table with name \"staging.stg_sales_invoices\" does not exist because schema \"staging\" does not exist.\r\n\r\nLINE 7:     SELECT expected_delivery_date AS d FROM staging.stg_sales_orders\r\n                       ^"
+  },
+  {
+    "at": "2026-06-09T12:58:52.044667300+00:00",
+    "status": "error",
+    "duration_ms": 167,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Catalog Error: Table with name \"staging.stg_sales_invoices\" does not exist because schema \"staging\" does not exist.\r\n\r\nLINE 7:     SELECT expected_delivery_date AS d FROM staging.stg_sales_orders\r\n                       ^"
+  },
+  {
+    "at": "2026-06-09T12:59:02.988430400+00:00",
+    "status": "error",
+    "duration_ms": 369,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T12:59:25.124134800+00:00",
+    "status": "error",
+    "duration_ms": 248,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T12:59:56.702790300+00:00",
+    "status": "error",
+    "duration_ms": 449,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T13:00:17.259010500+00:00",
+    "status": "error",
+    "duration_ms": 370,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T13:00:29.031122200+00:00",
+    "status": "error",
+    "duration_ms": 288,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Catalog Error: Table with name \"staging.stg_sales_invoices\" does not exist because schema \"staging\" does not exist.\r\n\r\nLINE 7:     SELECT expected_delivery_date AS d FROM staging.stg_sales_orders\r\n                       ^"
+  },
+  {
+    "at": "2026-06-09T13:01:40.623033600+00:00",
+    "status": "error",
+    "duration_ms": 248,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T13:01:52.954196400+00:00",
+    "status": "error",
+    "duration_ms": 451,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T13:02:28.414531900+00:00",
+    "status": "error",
+    "duration_ms": 450,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T13:04:08.714209+00:00",
+    "status": "error",
+    "duration_ms": 0,
+    "rows": 0,
+    "node_count": 0,
+    "trigger": "manual",
+    "error": "config: snk.postgres: upsert mode needs at least one column in Conflict columns"
+  },
+  {
+    "at": "2026-06-09T13:04:12.726041900+00:00",
+    "status": "error",
+    "duration_ms": 0,
+    "rows": 0,
+    "node_count": 0,
+    "trigger": "manual",
+    "error": "config: snk.postgres: upsert mode needs at least one column in Conflict columns"
+  },
+  {
+    "at": "2026-06-09T13:04:13.679221200+00:00",
+    "status": "error",
+    "duration_ms": 0,
+    "rows": 0,
+    "node_count": 0,
+    "trigger": "manual",
+    "error": "config: snk.postgres: upsert mode needs at least one column in Conflict columns"
+  },
+  {
+    "at": "2026-06-09T13:04:15.367872300+00:00",
+    "status": "error",
+    "duration_ms": 0,
+    "rows": 0,
+    "node_count": 0,
+    "trigger": "manual",
+    "error": "config: snk.postgres: upsert mode needs at least one column in Conflict columns"
+  },
+  {
+    "at": "2026-06-09T13:04:16.073019300+00:00",
+    "status": "error",
+    "duration_ms": 0,
+    "rows": 0,
+    "node_count": 0,
+    "trigger": "manual",
+    "error": "config: snk.postgres: upsert mode needs at least one column in Conflict columns"
+  },
+  {
+    "at": "2026-06-09T13:04:17.573098100+00:00",
+    "status": "error",
+    "duration_ms": 0,
+    "rows": 0,
+    "node_count": 0,
+    "trigger": "manual",
+    "error": "config: snk.postgres: upsert mode needs at least one column in Conflict columns"
+  },
+  {
+    "at": "2026-06-09T13:04:31.249379900+00:00",
+    "status": "error",
+    "duration_ms": 0,
+    "rows": 0,
+    "node_count": 0,
+    "trigger": "manual",
+    "error": "config: snk.postgres: upsert mode needs at least one column in Conflict columns"
+  },
+  {
+    "at": "2026-06-09T13:04:31.902901800+00:00",
+    "status": "error",
+    "duration_ms": 0,
+    "rows": 0,
+    "node_count": 0,
+    "trigger": "manual",
+    "error": "config: snk.postgres: upsert mode needs at least one column in Conflict columns"
+  },
+  {
+    "at": "2026-06-09T13:04:32.147258500+00:00",
+    "status": "error",
+    "duration_ms": 0,
+    "rows": 0,
+    "node_count": 0,
+    "trigger": "manual",
+    "error": "config: snk.postgres: upsert mode needs at least one column in Conflict columns"
+  },
+  {
+    "at": "2026-06-09T13:04:35.615474800+00:00",
+    "status": "error",
+    "duration_ms": 248,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T13:06:53.904684500+00:00",
+    "status": "error",
+    "duration_ms": 248,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Catalog Error: Table with name \"staging.stg_sales_invoices\" does not exist because schema \"staging\" does not exist.\r\n\r\nLINE 4: ...)) TO 'C:/Users/TRINHN~1/AppData/Local/Temp/duckle_run_18240_1781010413654846500_15.duckdb.attsrc-n_mq6ipbkx_x6pfe.parquet...\r\n                                                                         ^"
+  },
+  {
+    "at": "2026-06-09T13:07:37.278599400+00:00",
+    "status": "error",
+    "duration_ms": 328,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Catalog Error: Table with name input does not exist!\r\nDid you mean \"pg_enum\"?\r\n\r\nLINE 4: ...~1/AppData/Local/Temp/duckle_run_18240_1781010456948343700_16.duckdb.attsrc-n_mq6ipbkx_x6pfe.parquet' (FORMAT PARQUET)\r\n                                                                        ^"
+  },
+  {
+    "at": "2026-06-09T13:07:50.065154600+00:00",
+    "status": "error",
+    "duration_ms": 248,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Catalog Error: Table with name staging.stg_sales_invoices does not exist!\r\nDid you mean \"duckle_src.staging.stg_sales_invoices\"?\r\n\r\nLINE 4: ...)) TO 'C:/Users/TRINHN~1/AppData/Local/Temp/duckle_run_18240_1781010469815714700_17.duckdb.attsrc-n_mq6ipbkx_x6pfe.parquet...\r\n                                                                       ^"
+  },
+  {
+    "at": "2026-06-09T13:08:01.445970800+00:00",
+    "status": "error",
+    "duration_ms": 288,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T13:08:35.529984900+00:00",
+    "status": "error",
+    "duration_ms": 449,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T13:09:11.624123300+00:00",
+    "status": "error",
+    "duration_ms": 368,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T13:09:19.511091400+00:00",
+    "status": "error",
+    "duration_ms": 249,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T13:10:15.719744600+00:00",
     "status": "error",
     "duration_ms": 247,
     "rows": 0,
     "node_count": 1,
     "trigger": "manual",
-    "error": "PostgreSQL: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"country_id\", \"country_name\", \"formal_name\", \"iso_alpha3_code\", \"iso_numeric_code\", \"country_type\", \"latest_recorded_population\", \"continent\", \"region\", \"subregion\", \"border\", \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\".\"stg_application_countries\" ) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ..., \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\"....\r\n                                                             ^"
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
   },
   {
-    "at": "2026-06-09T09:52:58.366553400+00:00",
+    "at": "2026-06-09T13:10:34.630327300+00:00",
     "status": "error",
-    "duration_ms": 248,
+    "duration_ms": 86,
     "rows": 0,
     "node_count": 1,
     "trigger": "manual",
-    "error": "PostgreSQL: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"country_id\", \"country_name\", \"formal_name\", \"iso_alpha3_code\", \"iso_numeric_code\", \"country_type\", \"latest_recorded_population\", \"continent\", \"region\", \"subregion\", \"border\", \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\".\"stg_application_countries\" ) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ..., \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\"....\r\n                                                             ^"
+    "error": "Source: query: Parser Error: syntax error at or near \";\"\r\n\r\nLINE 4:     current_schema;)) TO 'C:/Users/TRINHN~1/AppData/Local/Temp/duckle_run_182...\r\n                          ^"
   },
   {
-    "at": "2026-06-09T09:54:32.172890300+00:00",
+    "at": "2026-06-09T13:10:41.243791300+00:00",
+    "status": "ok",
+    "duration_ms": 292,
+    "rows": 1,
+    "node_count": 1,
+    "trigger": "manual"
+  },
+  {
+    "at": "2026-06-09T13:11:32.719323100+00:00",
     "status": "error",
-    "duration_ms": 208,
+    "duration_ms": 288,
     "rows": 0,
     "node_count": 1,
     "trigger": "manual",
-    "error": "PostgreSQL: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"country_id\", \"country_name\", \"formal_name\", \"iso_alpha3_code\", \"iso_numeric_code\", \"country_type\", \"latest_recorded_population\", \"continent\", \"region\", \"subregion\", \"border\", \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\".\"stg_application_countries\" ) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ..., \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\"....\r\n                                                             ^"
+    "error": "Source: query: Catalog Error: Table with name \"staging.stg_sales_invoices\" does not exist because schema \"staging\" does not exist.\r\n\r\nLINE 7:     SELECT expected_delivery_date AS d FROM staging.stg_sales_orders\r\n                       ^"
   },
   {
-    "at": "2026-06-09T09:56:00.327444900+00:00",
+    "at": "2026-06-09T13:12:08.106710400+00:00",
+    "status": "error",
+    "duration_ms": 327,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Catalog Error: Table with name stg_sales_invoices does not exist!\r\nDid you mean \"duckle_src.staging.stg_sales_invoices\"?\r\n\r\nLINE 13:     SELECT expected_delivery_date AS d FROM stg_sales_orders\r\n                                    ^"
+  },
+  {
+    "at": "2026-06-09T13:12:58.847259600+00:00",
     "status": "error",
     "duration_ms": 207,
     "rows": 0,
     "node_count": 1,
     "trigger": "manual",
-    "error": "PostgreSQL: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"country_id\", \"country_name\", \"formal_name\", \"iso_alpha3_code\", \"iso_numeric_code\", \"country_type\", \"latest_recorded_population\", \"continent\", \"region\", \"subregion\", \"border\", \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\".\"stg_application_countries\" ) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ..., \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\"....\r\n                                                             ^"
+    "error": "Source: query: Catalog Error: Table with name stg_sales_invoices does not exist!\r\nDid you mean \"duckle_src.staging.stg_sales_invoices\"?\r\n\r\nLINE 13:     SELECT expected_delivery_date AS d FROM stg_sales_orders\r\n                                    ^"
   },
   {
-    "at": "2026-06-09T09:56:42.317616+00:00",
+    "at": "2026-06-09T13:13:45.269591800+00:00",
+    "status": "error",
+    "duration_ms": 86,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Parser Error: syntax error at or near \";\"\r\n\r\nLINE 15: WHERE d IS NOT NULL;)) TO 'C:/Users/TRINHN~1/AppData/Local/Temp/duckle_run_182...\r\n                            ^"
+  },
+  {
+    "at": "2026-06-09T13:13:49.693602900+00:00",
+    "status": "error",
+    "duration_ms": 166,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Catalog Error: Table with name \"staging.stg_sales_invoices\" does not exist because schema \"staging\" does not exist.\r\n\r\nLINE 7:     SELECT expected_delivery_date FROM staging.stg_sales_orders\r\n                            ^"
+  },
+  {
+    "at": "2026-06-09T13:20:38.429864+00:00",
+    "status": "error",
+    "duration_ms": 168,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Catalog Error: Table with name \"staging.stg_sales_invoices\" does not exist because schema \"staging\" does not exist.\r\n\r\nLINE 7:     SELECT expected_delivery_date FROM staging.stg_sales_orders\r\n                            ^"
+  },
+  {
+    "at": "2026-06-09T13:23:37.609785400+00:00",
+    "status": "error",
+    "duration_ms": 328,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T13:24:31.138666900+00:00",
+    "status": "error",
+    "duration_ms": 330,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T13:25:55.312463400+00:00",
+    "status": "error",
+    "duration_ms": 288,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Catalog Error: Table with name \"staging.stg_sales_invoices\" does not exist because schema \"staging\" does not exist.\r\n\r\nLINE 3: ...~1/AppData/Local/Temp/duckle_run_18240_1781011555022631600_33.duckdb.attsrc-n_mq6ipbkx_x6pfe.parquet' (FORMAT PARQUET)\r\n                                                                       ^"
+  },
+  {
+    "at": "2026-06-09T13:26:14.488284400+00:00",
+    "status": "error",
+    "duration_ms": 208,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Catalog Error: Table with name stg_sales_invoices does not exist!\r\nDid you mean \"duckle_src.staging.stg_sales_invoices\"?\r\n\r\nLINE 3: .../Local/Temp/duckle_run_18240_1781011574278797500_34.duckdb.attsrc-n_mq6ipbkx_x6pfe.parquet' (FORMAT PARQUET)\r\n                                                                     ^"
+  },
+  {
+    "at": "2026-06-09T13:26:53.556317500+00:00",
+    "status": "error",
+    "duration_ms": 247,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T13:28:04.683320200+00:00",
+    "status": "error",
+    "duration_ms": 369,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T13:28:06.479386600+00:00",
+    "status": "error",
+    "duration_ms": 329,
+    "rows": 0,
+    "node_count": 1,
+    "trigger": "manual",
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
+  },
+  {
+    "at": "2026-06-09T13:28:09.206566500+00:00",
     "status": "error",
     "duration_ms": 248,
     "rows": 0,
     "node_count": 1,
     "trigger": "manual",
-    "error": "PostgreSQL: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"country_id\", \"country_name\", \"formal_name\", \"iso_alpha3_code\", \"iso_numeric_code\", \"country_type\", \"latest_recorded_population\", \"continent\", \"region\", \"subregion\", \"border\", \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\".\"stg_application_countries\" ) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ..., \"last_edited_by\", \"valid_from\", \"valid_to\" FROM \"staging\"....\r\n                                                             ^"
-  },
-  {
-    "at": "2026-06-09T09:58:31.167328600+00:00",
-    "status": "error",
-    "duration_ms": 87,
-    "rows": 0,
-    "node_count": 1,
-    "trigger": "manual",
-    "error": "PostgreSQL: query: Parser Error: syntax error at or near \";\"\r\n\r\nLINE 1: ... duckle_src (TYPE POSTGRES, READ_ONLY); COPY ((SELECT 1 AS test;)) TO 'C:/Users/TRINHN~1/AppData/Local/Temp/duckle_run_238...\r\n                                                                          ^"
-  },
-  {
-    "at": "2026-06-09T09:58:53.441013900+00:00",
-    "status": "ok",
-    "duration_ms": 373,
-    "rows": 1,
-    "node_count": 1,
-    "trigger": "manual"
+    "error": "Source: query: Invalid Error: Failed to prepare COPY \"COPY (SELECT \"invoice_id\", \"customer_id\", \"bill_to_customer_id\", \"order_id\", \"delivery_method_id\", \"contact_person_id\", \"accounts_person_id\", \"salesperson_person_id\", \"packed_by_person_id\", \"invoice_date\", \"customer_purchase_order_number\", \"is_credit_note\", \"delivery_instructions\", \"total_dry_items\", \"total_chiller_items\", \"returned_delivery_data\", \"confirmed_delivery_time\", \"confirmed_received_by\", \"last_edited_by\", \"last_edited_when\", \"has_confirmed_delivery_time\", \"has_confirmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\".\"stg_sales_invoices\" WHERE ctid BETWEEN '(0,0)'::tid AND '(1000,0)'::tid) TO STDOUT (FORMAT \"binary\");\": ERROR:  permission denied for schema staging\r\nLINE 1: ...irmed_received_by\", \"has_confirmed_delivery\" FROM \"staging\"....\r\n                                                             ^"
   }
 ]

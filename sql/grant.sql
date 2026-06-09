@@ -16,3 +16,15 @@ FROM pg_namespace
 WHERE nspname = 'staging';
 
 SELECT has_schema_privilege('postgres', 'staging', 'USAGE');
+
+ALTER SCHEMA staging OWNER TO postgres;
+
+GRANT USAGE, CREATE ON SCHEMA staging TO postgres;
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+ON ALL TABLES IN SCHEMA staging
+TO postgres;
+
+GRANT USAGE, SELECT
+ON ALL SEQUENCES IN SCHEMA staging
+TO postgres;

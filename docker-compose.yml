@@ -1,0 +1,12 @@
+services:
+  hop-web:
+    image: apache/hop-web:latest
+    container_name: hop-web
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./projects:/files/projects
+      - ./drivers:/files/drivers
+    environment:
+      HOP_PROJECT_FOLDER: /files/projects
+      HOP_PROJECT_NAME: wwi_etl

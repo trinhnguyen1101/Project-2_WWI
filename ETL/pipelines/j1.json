@@ -1,46 +1,4 @@
 {
-  "nodes": [
-    {
-      "id": "n_mq6gjao4_6x9t7",
-      "type": "source",
-      "position": {
-        "x": 132.71186440677963,
-        "y": 59.91525423728813
-      },
-      "data": {
-        "label": "PostgreSQL",
-        "componentId": "src.postgres",
-        "properties": {
-          "port": 5432,
-          "mode": "sql",
-          "fetchSize": 1000,
-          "host": "localhost",
-          "database": "Staging",
-          "username": "postgres",
-          "password": "1101",
-          "schemaName": "staging",
-          "tableName": "stg_application_countries",
-          "sql": "SELECT 1 AS test"
-        },
-        "schema": [
-          {
-            "name": "test",
-            "type": "int32",
-            "nullable": true
-          }
-        ],
-        "sampleRows": [
-          {
-            "test": 1
-          }
-        ]
-      },
-      "measured": {
-        "width": 220,
-        "height": 169
-      },
-      "selected": false
-    }
-  ],
+  "nodes": [],
   "edges": []
 }
