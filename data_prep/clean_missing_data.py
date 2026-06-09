@@ -249,10 +249,10 @@ def extract_country_of_manufacture(custom_fields: pd.Series) -> pd.Series:
     return custom_fields.map(parse_one)
 
 
-def add_common_missing_count(df: pd.DataFrame) -> pd.DataFrame:
-    df = df.copy()
-    df["MissingFieldCount"] = df.isna().sum(axis=1)
-    return df
+# def add_common_missing_count(df: pd.DataFrame) -> pd.DataFrame:
+#     df = df.copy()
+#     df["MissingFieldCount"] = df.isna().sum(axis=1)
+#     return df
 
 
 def to_source_schema_table(table_name: str) -> str:
@@ -412,7 +412,7 @@ def clean_table(table_name: str) -> tuple[pd.DataFrame, dict[str, object]]:
     cleaner = TABLE_CLEANERS.get(table_name)
     cleaned = cleaner(raw) if cleaner else raw.copy()
     cleaned, dropped_cols = apply_drop_rules(table_name, cleaned)
-    cleaned = add_common_missing_count(cleaned)
+    # cleaned = add_common_missing_count(cleaned)
     added_cols = sorted(set(cleaned.columns) - before_cols)
     report = {
         "category": TABLE_CATEGORY.get(table_name, "Unmapped"),
