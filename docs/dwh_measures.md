@@ -21,6 +21,31 @@ Các phân tích tồn kho như inventory movement, inventory snapshot, reorder 
 - SCD Type 2 không được cài trong DDL hiện tại. Nếu cần lưu lịch sử thuộc tính, xử lý ở giai đoạn ETL rồi mở rộng dimension sau.
 - Các bảng `_Archive` chưa cần dùng trong scope hiện tại, trừ khi ETL được mở rộng để nạp SCD.
 
+## Phân Loại Dimension Tĩnh/Động
+
+Trong thiết kế hiện tại, các dimension đều đang được mô hình hóa theo trạng thái hiện tại của nguồn. DDL chưa có các cột SCD như `effective_from`, `effective_to`, `is_current`, nên nếu ETL nạp lặp lại thì mặc định nên xử lý như **Type 1/upsert**: bản ghi mới nhất sẽ ghi đè thuộc tính cũ theo khóa nguồn.
+
+| Dimension | Phân loại | Lý do | Gợi ý ETL hiện tại |
+|---|---|---|---|
+| `dim_date` | Tĩnh | Lịch ngày được sinh theo quy tắc, không phụ thuộc thay đổi nghiệp vụ | Sinh một lần hoặc bổ sung thêm ngày mới khi mở rộng khoảng thời gian |
+| `dim_country` | Tĩnh tương đối | Tên quốc gia, vùng, ISO code và dân số có thể đổi nhưng rất hiếm | Upsert Type 1 là đủ cho scope hiện tại |
+| `dim_state_province` | Tĩnh tương đối | Thuộc tính địa lý và sales territory ít thay đổi | Upsert Type 1; chỉ cần SCD nếu phân tích lịch sử territory |
+| `dim_city` | Tĩnh tương đối | Thành phố và quan hệ với state/province gần như ổn định | Upsert Type 1 |
+| `dim_customer_category` | Tĩnh/lookup | Danh mục loại khách hàng nhỏ, thay đổi rất ít | Load lookup hoặc upsert Type 1 |
+| `dim_buying_group` | Tĩnh/lookup | Danh mục nhóm mua hàng nhỏ, ít thay đổi | Load lookup hoặc upsert Type 1 |
+| `dim_delivery_method` | Tĩnh/lookup | Danh mục phương thức giao hàng ít thay đổi | Load lookup hoặc upsert Type 1 |
+| `dim_payment_method` | Tĩnh/lookup | Danh mục phương thức thanh toán ít thay đổi | Load lookup hoặc upsert Type 1 |
+| `dim_transaction_type` | Tĩnh/lookup | Danh mục loại giao dịch nghiệp vụ ít thay đổi | Load lookup hoặc upsert Type 1 |
+| `dim_package_type` | Tĩnh/lookup | Danh mục kiểu đóng gói ít thay đổi | Load lookup hoặc upsert Type 1 |
+| `dim_stock_group` | Tĩnh/lookup | Danh mục nhóm hàng ít thay đổi | Load lookup hoặc upsert Type 1 |
+| `dim_person` | Động chậm | Nhân sự có thể đổi email, trạng thái employee/salesperson hoặc thông tin liên hệ | Upsert Type 1; cân nhắc SCD Type 2 nếu cần phân tích theo trạng thái nhân sự tại thời điểm bán |
+| `dim_supplier` | Động chậm | Supplier có thể đổi category, city, delivery method, payment days, website | Upsert Type 1; cân nhắc Type 2 nếu cần lịch sử supplier/payment terms |
+| `dim_customer` | Động quan trọng | Customer có thể đổi category, buying group, city, credit limit, discount, credit hold, payment days | Nên upsert Type 1 trong thiết kế hiện tại; là ứng viên SCD Type 2 quan trọng nhất nếu cần phân tích lịch sử |
+| `dim_product` | Động quan trọng | Sản phẩm có thể đổi supplier, package, brand/size, tax rate, unit price, retail price, lead time, tags | Nên upsert Type 1 trong thiết kế hiện tại; là ứng viên SCD Type 2 quan trọng nếu cần giữ lịch sử giá/thuộc tính sản phẩm |
+| `bridge_product_stock_group` | Quan hệ động | Quan hệ sản phẩm - nhóm hàng có thể thay đổi theo thời gian | Nạp lại/upsert theo cặp khóa; nếu cần lịch sử nhóm hàng thì mở rộng bridge có hiệu lực thời gian |
+
+Nếu chỉ làm bài toán phân tích hiện tại, có thể xem nhóm lookup và địa lý là tĩnh/tĩnh tương đối, còn nhóm cần chú ý nhất khi làm lịch sử là `dim_customer`, `dim_product`, `dim_supplier`, sau đó đến `dim_person`.
+
 ## Dimension Catalog
 
 | Dimension | Ý nghĩa | Dùng để phân tích |
