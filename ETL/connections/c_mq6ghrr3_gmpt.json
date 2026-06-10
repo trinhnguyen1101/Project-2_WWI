@@ -1,8 +1,0 @@
-{
-  "kind": "postgres",
-  "host": "localhost",
-  "port": 5432,
-  "database": "Staging",
-  "username": "postgres",
-  "password": "1101"
-}
