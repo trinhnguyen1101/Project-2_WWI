@@ -347,6 +347,8 @@ Mapping field:
 | `gross_margin_pct` | `line.line_profit / NULLIF(line.extended_price - line.tax_amount, 0)` |
 | `average_selling_price_ex_tax` | `(line.extended_price - line.tax_amount) / NULLIF(line.quantity, 0)` |
 | `profit_per_unit` | `line.line_profit / NULLIF(line.quantity, 0)` |
+| `period_average_order_value` | `SUM(revenue_ex_tax) / COUNT(DISTINCT source_invoice_id)` theo ky load, nen dung thang |
+| `period_sales_growth_rate` | `(current_period_revenue - prior_period_revenue) / NULLIF(prior_period_revenue, 0)` theo ky load, nen dung thang |
 
 Phu thuoc load truoc:
 
@@ -355,6 +357,10 @@ Phu thuoc load truoc:
 - `dim_product`
 - `dim_package_type`
 - `dim_person`
+
+Luu y: `period_average_order_value` va `period_sales_growth_rate` la KPI tong hop
+theo ky, khong phai measure rieng cua tung invoice line. Khi dua vao fact, gia
+tri nay se lap lai tren cac dong cung ky.
 
 ### 2. `dwh.fact_order_fulfillment_line`
 
@@ -419,6 +425,7 @@ Can join dimension:
 |---|---|
 | `transaction_date_key` | `txn.transaction_date` -> `dim_date.full_date` |
 | `finalization_date_key` | `txn.finalization_date` -> `dim_date.full_date` |
+| `due_date_key` | `txn.transaction_date + dim_customer.payment_days` -> `dim_date.full_date` |
 | `customer_key` | `txn.customer_id` -> `dim_customer.source_customer_id` |
 | `payment_method_key` | `txn.payment_method_id` -> `dim_payment_method.source_payment_method_id` |
 | `transaction_type_key` | `txn.transaction_type_id` -> `dim_transaction_type.source_transaction_type_id` |
@@ -436,6 +443,14 @@ Mapping field:
 | `paid_amount` | `txn.paid_amount` hoac `txn.transaction_amount - txn.outstanding_balance` |
 | `outstanding_ratio` | `txn.outstanding_ratio` hoac `txn.outstanding_balance / NULLIF(txn.transaction_amount, 0)` |
 | `days_to_collect` | `txn.finalization_date - txn.transaction_date` |
+| `collection_age_days` | `COALESCE(txn.finalization_date, CURRENT_DATE) - txn.transaction_date` |
+| `days_past_due` | `GREATEST(COALESCE(txn.finalization_date, CURRENT_DATE) - (txn.transaction_date + dim_customer.payment_days), 0)` |
+| `current_ar_amount` | `CASE WHEN txn.outstanding_balance > 0 AND days_past_due = 0 THEN txn.outstanding_balance ELSE 0 END` |
+| `past_due_amount` | `CASE WHEN txn.outstanding_balance > 0 AND days_past_due > 0 THEN txn.outstanding_balance ELSE 0 END` |
+| `period_current_ar_ratio` | `SUM(current_ar_amount) / NULLIF(SUM(current_ar_amount) + SUM(past_due_amount), 0)` theo ky load, nen dung thang |
+| `period_receivable_outstanding_ratio` | `SUM(outstanding_amount) / NULLIF(SUM(receivable_inc_tax), 0)` theo ky load, nen dung thang |
+| `period_average_days_to_collect` | `AVG(days_to_collect)` theo ky load, bo qua null |
+| `period_overdue_transaction_rate` | `AVG(CASE WHEN is_overdue THEN 1.0 ELSE 0.0 END)` theo ky load |
 | `is_finalized` | `txn.is_finalized_flag` hoac `txn.is_finalized` |
 | `is_overdue` | `days_to_collect > dim_customer.payment_days`; voi giao dich chua final, co the dung `CURRENT_DATE - txn.transaction_date > payment_days` |
 
@@ -445,6 +460,15 @@ Phu thuoc load truoc:
 - `dim_customer`
 - `dim_payment_method`
 - `dim_transaction_type`
+
+Luu y: cac cot dung `CURRENT_DATE` nhu `collection_age_days`, `days_past_due`,
+`current_ar_amount`, `past_due_amount` la snapshot tai thoi diem ETL. Neu can
+theo doi lich su cong no theo tung ngay, nen them mot fact snapshot rieng thay
+vi chi cap nhat lai fact transaction.
+
+Cac cot bat dau bang `period_` la KPI tong hop theo ky va se lap lai tren cac
+dong transaction cung ky. Neu can phan tich theo customer, co the tinh theo
+`customer_key + month`; neu can KPI tong cong ty, tinh theo month.
 
 ## Kiem Tra Chat Luong Truoc Khi Load Fact
 
@@ -505,4 +529,3 @@ Thu tu truncate khi full refresh nen nguoc voi thu tu load:
 3. `dim_product`, `dim_customer`, `dim_supplier`.
 4. Lookup dimensions va geography dimensions.
 5. `dim_date` neu muon tao lai lich.
-
