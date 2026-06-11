@@ -12,7 +12,9 @@ Nguyen tac chung:
 - DWH dung surrogate key nhu `customer_key`, `product_key`, `date_key`.
 - Dimension phai duoc load truoc fact de fact lookup duoc surrogate key.
 - Cac dimension hien tai nen load theo kieu Type 1/upsert bang khoa nguon `source_*_id`.
-- Fact nen load theo grain da thiet ke va tranh insert trung bang cac cot `source_*_id` unique.
+- Fact chi tiet nen tranh insert trung bang cac cot `source_*_id` unique.
+- Aggregate fact nen tranh insert trung bang khoa grain, vi du `period_date_key`
+  hoac cap `(customer_key, period_date_key)`.
 
 ## Thu Tu Load Tong The
 
@@ -31,6 +33,8 @@ Nguyen tac chung:
 7. Load facts:
    `fact_sales_invoice_line`, `fact_order_fulfillment_line`,
    `fact_customer_transaction`.
+8. Load aggregate facts:
+   `fact_business_kpi_month`, `fact_customer_kpi_month`.
 
 ## Load Dimension
 
@@ -347,8 +351,6 @@ Mapping field:
 | `gross_margin_pct` | `line.line_profit / NULLIF(line.extended_price - line.tax_amount, 0)` |
 | `average_selling_price_ex_tax` | `(line.extended_price - line.tax_amount) / NULLIF(line.quantity, 0)` |
 | `profit_per_unit` | `line.line_profit / NULLIF(line.quantity, 0)` |
-| `period_average_order_value` | `SUM(revenue_ex_tax) / COUNT(DISTINCT source_invoice_id)` theo ky load, nen dung thang |
-| `period_sales_growth_rate` | `(current_period_revenue - prior_period_revenue) / NULLIF(prior_period_revenue, 0)` theo ky load, nen dung thang |
 
 Phu thuoc load truoc:
 
@@ -357,10 +359,6 @@ Phu thuoc load truoc:
 - `dim_product`
 - `dim_package_type`
 - `dim_person`
-
-Luu y: `period_average_order_value` va `period_sales_growth_rate` la KPI tong hop
-theo ky, khong phai measure rieng cua tung invoice line. Khi dua vao fact, gia
-tri nay se lap lai tren cac dong cung ky.
 
 ### 2. `dwh.fact_order_fulfillment_line`
 
@@ -447,10 +445,6 @@ Mapping field:
 | `days_past_due` | `GREATEST(COALESCE(txn.finalization_date, CURRENT_DATE) - (txn.transaction_date + dim_customer.payment_days), 0)` |
 | `current_ar_amount` | `CASE WHEN txn.outstanding_balance > 0 AND days_past_due = 0 THEN txn.outstanding_balance ELSE 0 END` |
 | `past_due_amount` | `CASE WHEN txn.outstanding_balance > 0 AND days_past_due > 0 THEN txn.outstanding_balance ELSE 0 END` |
-| `period_current_ar_ratio` | `SUM(current_ar_amount) / NULLIF(SUM(current_ar_amount) + SUM(past_due_amount), 0)` theo ky load, nen dung thang |
-| `period_receivable_outstanding_ratio` | `SUM(outstanding_amount) / NULLIF(SUM(receivable_inc_tax), 0)` theo ky load, nen dung thang |
-| `period_average_days_to_collect` | `AVG(days_to_collect)` theo ky load, bo qua null |
-| `period_overdue_transaction_rate` | `AVG(CASE WHEN is_overdue THEN 1.0 ELSE 0.0 END)` theo ky load |
 | `is_finalized` | `txn.is_finalized_flag` hoac `txn.is_finalized` |
 | `is_overdue` | `days_to_collect > dim_customer.payment_days`; voi giao dich chua final, co the dung `CURRENT_DATE - txn.transaction_date > payment_days` |
 
@@ -466,9 +460,110 @@ Luu y: cac cot dung `CURRENT_DATE` nhu `collection_age_days`, `days_past_due`,
 theo doi lich su cong no theo tung ngay, nen them mot fact snapshot rieng thay
 vi chi cap nhat lai fact transaction.
 
-Cac cot bat dau bang `period_` la KPI tong hop theo ky va se lap lai tren cac
-dong transaction cung ky. Neu can phan tich theo customer, co the tinh theo
-`customer_key + month`; neu can KPI tong cong ty, tinh theo month.
+### 4. `dwh.fact_business_kpi_month`
+
+Grain: 1 dong = 1 thang, dung cho dashboard KPI tong the.
+
+Nguon DWH:
+
+- `dwh.fact_sales_invoice_line`
+- `dwh.fact_customer_transaction`
+- `dwh.dim_date`
+
+Khoa:
+
+| DWH field | Cach tinh |
+|---|---|
+| `period_date_key` | date key cua ngay dau thang, lay tu `dim_date` |
+
+Nhom sales KPI:
+
+| DWH field | Cong thuc |
+|---|---|
+| `revenue_ex_tax` | `SUM(fact_sales_invoice_line.revenue_ex_tax)` theo thang |
+| `revenue_inc_tax` | `SUM(fact_sales_invoice_line.revenue_inc_tax)` theo thang |
+| `gross_profit` | `SUM(fact_sales_invoice_line.gross_profit)` theo thang |
+| `estimated_cogs` | `SUM(fact_sales_invoice_line.estimated_cogs)` theo thang |
+| `quantity_sold` | `SUM(fact_sales_invoice_line.quantity_sold)` theo thang |
+| `invoice_count` | `COUNT(DISTINCT fact_sales_invoice_line.source_invoice_id)` theo thang |
+| `gross_margin_pct` | `gross_profit / NULLIF(revenue_ex_tax, 0)` |
+| `average_selling_price_ex_tax` | `revenue_ex_tax / NULLIF(quantity_sold, 0)` |
+| `profit_per_unit` | `gross_profit / NULLIF(quantity_sold, 0)` |
+| `average_order_value` | `revenue_ex_tax / NULLIF(invoice_count, 0)` |
+| `sales_growth_rate` | `(current_month_revenue - prior_month_revenue) / NULLIF(prior_month_revenue, 0)` |
+
+Nhom receivable KPI:
+
+| DWH field | Cong thuc |
+|---|---|
+| `receivable_inc_tax` | `SUM(fact_customer_transaction.receivable_inc_tax)` theo thang |
+| `outstanding_amount` | `SUM(fact_customer_transaction.outstanding_amount)` theo thang |
+| `paid_amount` | `SUM(fact_customer_transaction.paid_amount)` theo thang |
+| `current_ar_amount` | `SUM(fact_customer_transaction.current_ar_amount)` theo thang |
+| `past_due_amount` | `SUM(fact_customer_transaction.past_due_amount)` theo thang |
+| `receivable_outstanding_ratio` | `SUM(outstanding_amount) / NULLIF(SUM(receivable_inc_tax), 0)` |
+| `current_ar_ratio` | `SUM(current_ar_amount) / NULLIF(SUM(current_ar_amount) + SUM(past_due_amount), 0)` |
+| `average_days_to_collect` | `AVG(days_to_collect)` theo thang, bo qua null |
+| `average_collection_age_days` | `AVG(collection_age_days)` theo thang, bo qua null |
+| `average_days_past_due` | `AVG(days_past_due)` theo thang, bo qua null |
+| `overdue_transaction_rate` | `AVG(CASE WHEN is_overdue THEN 1.0 ELSE 0.0 END)` theo thang |
+
+Load sau 3 fact chi tiet. Fact nay co the truncate va load lai toan bo sau moi batch.
+
+### 5. `dwh.fact_customer_kpi_month`
+
+Grain: 1 dong = 1 khach hang + 1 thang, dung cho dashboard customer performance
+va ML phan cum khach hang.
+
+Nguon DWH:
+
+- `dwh.fact_sales_invoice_line`
+- `dwh.fact_customer_transaction`
+- `dwh.dim_date`
+- `dwh.dim_customer`
+
+Khoa:
+
+| DWH field | Cach tinh |
+|---|---|
+| `customer_key` | `dim_customer.customer_key` |
+| `period_date_key` | date key cua ngay dau thang, lay tu `dim_date` |
+
+Nhom sales KPI theo customer-thang:
+
+| DWH field | Cong thuc |
+|---|---|
+| `revenue_ex_tax` | `SUM(fact_sales_invoice_line.revenue_ex_tax)` theo customer-thang |
+| `revenue_inc_tax` | `SUM(fact_sales_invoice_line.revenue_inc_tax)` theo customer-thang |
+| `gross_profit` | `SUM(fact_sales_invoice_line.gross_profit)` theo customer-thang |
+| `estimated_cogs` | `SUM(fact_sales_invoice_line.estimated_cogs)` theo customer-thang |
+| `quantity_sold` | `SUM(fact_sales_invoice_line.quantity_sold)` theo customer-thang |
+| `invoice_count` | `COUNT(DISTINCT fact_sales_invoice_line.source_invoice_id)` theo customer-thang |
+| `gross_margin_pct` | `gross_profit / NULLIF(revenue_ex_tax, 0)` |
+| `average_selling_price_ex_tax` | `revenue_ex_tax / NULLIF(quantity_sold, 0)` |
+| `profit_per_unit` | `gross_profit / NULLIF(quantity_sold, 0)` |
+| `average_order_value` | `revenue_ex_tax / NULLIF(invoice_count, 0)` |
+| `sales_growth_rate` | `(current_customer_month_revenue - prior_customer_month_revenue) / NULLIF(prior_customer_month_revenue, 0)` |
+
+Nhom receivable KPI theo customer-thang:
+
+| DWH field | Cong thuc |
+|---|---|
+| `receivable_inc_tax` | `SUM(fact_customer_transaction.receivable_inc_tax)` theo customer-thang |
+| `outstanding_amount` | `SUM(fact_customer_transaction.outstanding_amount)` theo customer-thang |
+| `paid_amount` | `SUM(fact_customer_transaction.paid_amount)` theo customer-thang |
+| `current_ar_amount` | `SUM(fact_customer_transaction.current_ar_amount)` theo customer-thang |
+| `past_due_amount` | `SUM(fact_customer_transaction.past_due_amount)` theo customer-thang |
+| `receivable_outstanding_ratio` | `SUM(outstanding_amount) / NULLIF(SUM(receivable_inc_tax), 0)` |
+| `current_ar_ratio` | `SUM(current_ar_amount) / NULLIF(SUM(current_ar_amount) + SUM(past_due_amount), 0)` |
+| `average_days_to_collect` | `AVG(days_to_collect)` theo customer-thang, bo qua null |
+| `average_collection_age_days` | `AVG(collection_age_days)` theo customer-thang, bo qua null |
+| `average_days_past_due` | `AVG(days_past_due)` theo customer-thang, bo qua null |
+| `overdue_transaction_rate` | `AVG(CASE WHEN is_overdue THEN 1.0 ELSE 0.0 END)` theo customer-thang |
+
+Load sau 3 fact chi tiet va `dim_customer`. Day la bang nen dung khi export feature
+cho clustering, vi moi dong da dung grain khach hang-thang va khong lap theo
+invoice line/transaction.
 
 ## Kiem Tra Chat Luong Truoc Khi Load Fact
 
@@ -517,15 +612,21 @@ DO UPDATE SET
   name_col = EXCLUDED.name_col;
 ```
 
-Voi fact co cot `source_*_id UNIQUE`, co the:
+Voi fact chi tiet co cot `source_*_id UNIQUE`, co the:
 
 - `TRUNCATE` fact roi load lai neu day la bai tap/batch full refresh.
 - Hoac `ON CONFLICT (source_*_id) DO UPDATE` neu muon incremental/upsert.
 
+Voi aggregate fact:
+
+- `fact_business_kpi_month`: upsert theo `period_date_key`.
+- `fact_customer_kpi_month`: upsert theo `(customer_key, period_date_key)`.
+
 Thu tu truncate khi full refresh nen nguoc voi thu tu load:
 
-1. Facts.
-2. Bridge.
-3. `dim_product`, `dim_customer`, `dim_supplier`.
-4. Lookup dimensions va geography dimensions.
-5. `dim_date` neu muon tao lai lich.
+1. Aggregate facts: `fact_business_kpi_month`, `fact_customer_kpi_month`.
+2. Detail facts: `fact_sales_invoice_line`, `fact_order_fulfillment_line`, `fact_customer_transaction`.
+3. Bridge: `bridge_product_stock_group`.
+4. `dim_product`, `dim_customer`, `dim_supplier`.
+5. Lookup dimensions va geography dimensions.
+6. `dim_date` neu muon tao lai lich.

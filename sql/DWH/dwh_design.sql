@@ -185,8 +185,6 @@ CREATE TABLE IF NOT EXISTS dwh.fact_sales_invoice_line (
     gross_margin_pct numeric(18, 6),
     average_selling_price_ex_tax numeric(18, 6),
     profit_per_unit numeric(18, 6),
-    period_average_order_value numeric(18, 6),
-    period_sales_growth_rate numeric(18, 6),
 
     CONSTRAINT ck_fact_sales_invoice_line_quantity
         CHECK (quantity_sold >= 0),
@@ -244,10 +242,6 @@ CREATE TABLE IF NOT EXISTS dwh.fact_customer_transaction (
     days_past_due integer,
     current_ar_amount numeric(18, 2) NOT NULL,
     past_due_amount numeric(18, 2) NOT NULL,
-    period_current_ar_ratio numeric(18, 6),
-    period_receivable_outstanding_ratio numeric(18, 6),
-    period_average_days_to_collect numeric(18, 6),
-    period_overdue_transaction_rate numeric(18, 6),
     is_finalized boolean NOT NULL,
     is_overdue boolean,
 
@@ -275,3 +269,65 @@ CREATE INDEX IF NOT EXISTS idx_fact_customer_transaction_customer
     ON dwh.fact_customer_transaction(customer_key);
 CREATE INDEX IF NOT EXISTS idx_fact_customer_transaction_due_date
     ON dwh.fact_customer_transaction(due_date_key);
+
+CREATE TABLE IF NOT EXISTS dwh.fact_business_kpi_month (
+    period_date_key integer PRIMARY KEY REFERENCES dwh.dim_date(date_key),
+
+    revenue_ex_tax numeric(18, 2),
+    revenue_inc_tax numeric(18, 2),
+    gross_profit numeric(18, 2),
+    estimated_cogs numeric(18, 2),
+    quantity_sold numeric(18, 3),
+    invoice_count integer,
+    gross_margin_pct numeric(18, 6),
+    average_selling_price_ex_tax numeric(18, 6),
+    profit_per_unit numeric(18, 6),
+    average_order_value numeric(18, 6),
+    sales_growth_rate numeric(18, 6),
+
+    receivable_inc_tax numeric(18, 2),
+    outstanding_amount numeric(18, 2),
+    paid_amount numeric(18, 2),
+    current_ar_amount numeric(18, 2),
+    past_due_amount numeric(18, 2),
+    receivable_outstanding_ratio numeric(18, 6),
+    current_ar_ratio numeric(18, 6),
+    average_days_to_collect numeric(18, 6),
+    average_collection_age_days numeric(18, 6),
+    average_days_past_due numeric(18, 6),
+    overdue_transaction_rate numeric(18, 6)
+);
+
+CREATE TABLE IF NOT EXISTS dwh.fact_customer_kpi_month (
+    customer_key bigint NOT NULL REFERENCES dwh.dim_customer(customer_key),
+    period_date_key integer NOT NULL REFERENCES dwh.dim_date(date_key),
+
+    revenue_ex_tax numeric(18, 2),
+    revenue_inc_tax numeric(18, 2),
+    gross_profit numeric(18, 2),
+    estimated_cogs numeric(18, 2),
+    quantity_sold numeric(18, 3),
+    invoice_count integer,
+    gross_margin_pct numeric(18, 6),
+    average_selling_price_ex_tax numeric(18, 6),
+    profit_per_unit numeric(18, 6),
+    average_order_value numeric(18, 6),
+    sales_growth_rate numeric(18, 6),
+
+    receivable_inc_tax numeric(18, 2),
+    outstanding_amount numeric(18, 2),
+    paid_amount numeric(18, 2),
+    current_ar_amount numeric(18, 2),
+    past_due_amount numeric(18, 2),
+    receivable_outstanding_ratio numeric(18, 6),
+    current_ar_ratio numeric(18, 6),
+    average_days_to_collect numeric(18, 6),
+    average_collection_age_days numeric(18, 6),
+    average_days_past_due numeric(18, 6),
+    overdue_transaction_rate numeric(18, 6),
+
+    PRIMARY KEY (customer_key, period_date_key)
+);
+
+CREATE INDEX IF NOT EXISTS idx_fact_customer_kpi_month_period
+    ON dwh.fact_customer_kpi_month(period_date_key);
