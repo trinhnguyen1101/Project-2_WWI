@@ -1,210 +1,356 @@
 # DWH Measure Catalog
 
-## Chủ Đề
+Tai lieu nay mo ta cac dimension, fact, KPI va bai toan phan tich/ML trong DWH hien tai.
 
-Chủ đề chính: **phân tích hiệu quả bán hàng và lợi nhuận theo sản phẩm, khách hàng và khu vực**.
+Scope chinh: **phan tich hieu qua ban hang, loi nhuan, fulfillment don hang va chat luong thu tien/cong no khach hang**.
 
-DWH được rút gọn còn 3 fact:
+DWH hien co 5 fact:
 
-| Fact | Vai trò |
-|---|---|
-| `fact_sales_invoice_line` | Fact lõi cho doanh thu, lợi nhuận, biên lợi nhuận |
-| `fact_order_fulfillment_line` | Fact phụ để đánh giá khả năng đáp ứng đơn hàng |
-| `fact_customer_transaction` | Fact phụ để đánh giá chất lượng thu tiền và công nợ |
+| Fact | Grain | Vai tro |
+|---|---|---|
+| `fact_sales_invoice_line` | 1 dong hoa don | Fact chi tiet cho doanh thu, loi nhuan, gross margin |
+| `fact_order_fulfillment_line` | 1 dong don hang | Fact chi tiet cho kha nang dap ung don hang, fill rate, backorder |
+| `fact_customer_transaction` | 1 giao dich cong no | Fact chi tiet cho thu tien, outstanding, overdue |
+| `fact_business_kpi_month` | 1 thang | Aggregate fact KPI tong the theo thang |
+| `fact_customer_kpi_month` | 1 khach hang + 1 thang | Aggregate fact KPI khach hang-thang, phu hop cho clustering |
 
-Các phân tích tồn kho như inventory movement, inventory snapshot, reorder và inventory turnover đã được bỏ khỏi scope này để tránh làm chủ đề quá rộng.
+## Nguyen Tac Thiet Ke
 
-## Nguyên Tắc Thiết Kế
-
-- Dimension lưu thuộc tính mô tả tương đối tĩnh: tên khách hàng, nhóm khách hàng, khu vực, tên sản phẩm, supplier, stock group, payment days, lead time.
-- Fact lưu khóa liên kết, mã giao dịch nguồn để truy vết, và các measure/flag phục vụ phân tích.
-- SCD Type 2 không được cài trong DDL hiện tại. Nếu cần lưu lịch sử thuộc tính, xử lý ở giai đoạn ETL rồi mở rộng dimension sau.
-- Các bảng `_Archive` chưa cần dùng trong scope hiện tại, trừ khi ETL được mở rộng để nạp SCD.
-
-## Phân Loại Dimension Tĩnh/Động
-
-Trong thiết kế hiện tại, các dimension đều đang được mô hình hóa theo trạng thái hiện tại của nguồn. DDL chưa có các cột SCD như `effective_from`, `effective_to`, `is_current`, nên nếu ETL nạp lặp lại thì mặc định nên xử lý như **Type 1/upsert**: bản ghi mới nhất sẽ ghi đè thuộc tính cũ theo khóa nguồn.
-
-| Dimension | Phân loại | Lý do | Gợi ý ETL hiện tại |
-|---|---|---|---|
-| `dim_date` | Tĩnh | Lịch ngày được sinh theo quy tắc, không phụ thuộc thay đổi nghiệp vụ | Sinh một lần hoặc bổ sung thêm ngày mới khi mở rộng khoảng thời gian |
-| `dim_country` | Tĩnh tương đối | Tên quốc gia, vùng, ISO code và dân số có thể đổi nhưng rất hiếm | Upsert Type 1 là đủ cho scope hiện tại |
-| `dim_state_province` | Tĩnh tương đối | Thuộc tính địa lý và sales territory ít thay đổi | Upsert Type 1; chỉ cần SCD nếu phân tích lịch sử territory |
-| `dim_city` | Tĩnh tương đối | Thành phố và quan hệ với state/province gần như ổn định | Upsert Type 1 |
-| `dim_customer_category` | Tĩnh/lookup | Danh mục loại khách hàng nhỏ, thay đổi rất ít | Load lookup hoặc upsert Type 1 |
-| `dim_buying_group` | Tĩnh/lookup | Danh mục nhóm mua hàng nhỏ, ít thay đổi | Load lookup hoặc upsert Type 1 |
-| `dim_delivery_method` | Tĩnh/lookup | Danh mục phương thức giao hàng ít thay đổi | Load lookup hoặc upsert Type 1 |
-| `dim_payment_method` | Tĩnh/lookup | Danh mục phương thức thanh toán ít thay đổi | Load lookup hoặc upsert Type 1 |
-| `dim_transaction_type` | Tĩnh/lookup | Danh mục loại giao dịch nghiệp vụ ít thay đổi | Load lookup hoặc upsert Type 1 |
-| `dim_package_type` | Tĩnh/lookup | Danh mục kiểu đóng gói ít thay đổi | Load lookup hoặc upsert Type 1 |
-| `dim_stock_group` | Tĩnh/lookup | Danh mục nhóm hàng ít thay đổi | Load lookup hoặc upsert Type 1 |
-| `dim_person` | Động chậm | Nhân sự có thể đổi email, trạng thái employee/salesperson hoặc thông tin liên hệ | Upsert Type 1; cân nhắc SCD Type 2 nếu cần phân tích theo trạng thái nhân sự tại thời điểm bán |
-| `dim_supplier` | Động chậm | Supplier có thể đổi category, city, delivery method, payment days, website | Upsert Type 1; cân nhắc Type 2 nếu cần lịch sử supplier/payment terms |
-| `dim_customer` | Động quan trọng | Customer có thể đổi category, buying group, city, credit limit, discount, credit hold, payment days | Nên upsert Type 1 trong thiết kế hiện tại; là ứng viên SCD Type 2 quan trọng nhất nếu cần phân tích lịch sử |
-| `dim_product` | Động quan trọng | Sản phẩm có thể đổi supplier, package, brand/size, tax rate, unit price, retail price, lead time, tags | Nên upsert Type 1 trong thiết kế hiện tại; là ứng viên SCD Type 2 quan trọng nếu cần giữ lịch sử giá/thuộc tính sản phẩm |
-| `bridge_product_stock_group` | Quan hệ động | Quan hệ sản phẩm - nhóm hàng có thể thay đổi theo thời gian | Nạp lại/upsert theo cặp khóa; nếu cần lịch sử nhóm hàng thì mở rộng bridge có hiệu lực thời gian |
-
-Nếu chỉ làm bài toán phân tích hiện tại, có thể xem nhóm lookup và địa lý là tĩnh/tĩnh tương đối, còn nhóm cần chú ý nhất khi làm lịch sử là `dim_customer`, `dim_product`, `dim_supplier`, sau đó đến `dim_person`.
+- Dimension luu thuoc tinh mo ta: customer, product, supplier, dia ly, lookup.
+- Fact chi tiet giu grain goc cua nghiep vu va cac measure tinh duoc o grain do.
+- KPI tong hop theo thang khong dua vao fact chi tiet de tranh lap du lieu.
+- KPI tong hop duoc luu trong aggregate fact rieng: `fact_business_kpi_month` va `fact_customer_kpi_month`.
+- SCD Type 2 chua duoc cai trong DDL hien tai. Neu can lich su thuoc tinh, xu ly them trong ETL va mo rong dimension.
 
 ## Dimension Catalog
 
-| Dimension | Ý nghĩa | Dùng để phân tích |
+| Dimension | Y nghia | Dung de phan tich |
 |---|---|---|
-| `dim_date` | Lịch phân tích chuẩn theo ngày, tháng, quý, năm, thứ trong tuần | Xu hướng doanh thu/lợi nhuận theo thời gian, mùa vụ, so sánh tháng/quý/năm |
-| `dim_country` | Quốc gia của thành phố/tỉnh bang | Doanh thu, lợi nhuận và khách hàng theo quốc gia, vùng địa lý lớn |
-| `dim_state_province` | Tỉnh/bang, thuộc một quốc gia | Phân tích doanh thu/lợi nhuận theo khu vực trung gian như state, province, sales territory |
-| `dim_city` | Thành phố giao hàng hoặc địa chỉ khách hàng/supplier | Phân tích khu vực nào bán tốt, khu vực nào margin thấp, phân bố khách hàng theo địa lý |
-| `dim_customer_category` | Loại khách hàng, ví dụ nhóm bán lẻ, đại lý, khách doanh nghiệp | So sánh doanh thu, lợi nhuận, AOV, ngày thu tiền theo loại khách hàng |
-| `dim_buying_group` | Nhóm mua hàng mà khách hàng thuộc về | Đánh giá hiệu quả bán hàng theo buying group, tìm nhóm khách hàng đóng góp lợi nhuận cao |
-| `dim_delivery_method` | Phương thức giao hàng | Phân tích hiệu quả fulfill theo phương thức giao hàng, so sánh nhóm đơn giao bằng các hình thức khác nhau |
-| `dim_payment_method` | Phương thức thanh toán | Phân tích chất lượng thu tiền, outstanding ratio và days to collect theo phương thức thanh toán |
-| `dim_transaction_type` | Loại giao dịch công nợ hoặc tồn tại trong hệ thống nguồn | Phân loại giao dịch customer transaction, tách invoice/payment/credit theo loại nghiệp vụ |
-| `dim_package_type` | Kiểu đóng gói của sản phẩm hoặc dòng bán hàng | Phân tích quantity, revenue, fulfillment theo kiểu package |
-| `dim_stock_group` | Nhóm hàng/sản phẩm | So sánh doanh thu, lợi nhuận, margin và fill rate theo nhóm sản phẩm |
-| `dim_person` | Nhân sự liên quan như salesperson, picker, contact person | Phân tích doanh thu theo salesperson, hiệu quả picking theo picker nếu dữ liệu đủ |
-| `dim_supplier` | Nhà cung cấp của sản phẩm | Đánh giá supplier nào tạo nhiều doanh thu/lợi nhuận thông qua sản phẩm họ cung cấp |
-| `dim_customer` | Khách hàng mua hàng, kèm thuộc tính tín dụng và thanh toán | Phân tích khách hàng có giá trị cao, margin tốt, trả chậm, credit hold, payment days |
-| `dim_product` | Sản phẩm bán ra, kèm supplier, package, giá hiện tại, lead time, tag | Phân tích sản phẩm bán chạy, sản phẩm lợi nhuận cao/thấp, sản phẩm có fill rate thấp |
-| `bridge_product_stock_group` | Bảng nối nhiều-nhiều giữa sản phẩm và nhóm hàng | Cho phép một sản phẩm thuộc nhiều stock group, phục vụ roll-up doanh thu/lợi nhuận theo nhóm hàng |
+| `dim_date` | Lich ngay, thang, quy, nam | Xu huong doanh thu, loi nhuan, fulfillment, cong no theo thoi gian |
+| `dim_country` | Quoc gia | Phan tich theo vung dia ly lon |
+| `dim_state_province` | Tinh/bang, sales territory | Phan tich theo state/province/territory |
+| `dim_city` | Thanh pho cua customer/supplier | Phan tich doanh thu, margin, customer theo dia ly |
+| `dim_customer_category` | Loai khach hang | So sanh doanh thu, margin, cong no theo loai khach |
+| `dim_buying_group` | Nhom mua hang | Phan tich hieu qua theo buying group |
+| `dim_delivery_method` | Phuong thuc giao hang | Phan tich fulfillment theo cach giao hang |
+| `dim_payment_method` | Phuong thuc thanh toan | Phan tich outstanding va thu tien theo payment method |
+| `dim_transaction_type` | Loai giao dich cong no | Phan loai invoice/payment/credit |
+| `dim_package_type` | Kieu dong goi | Phan tich sales/fulfillment theo package |
+| `dim_stock_group` | Nhom san pham | Roll-up sales, profit, fill rate theo stock group |
+| `dim_person` | Nhan su nhu salesperson, picker | Phan tich salesperson/picker performance |
+| `dim_supplier` | Nha cung cap | Phan tich loi nhuan va fulfillment theo supplier |
+| `dim_customer` | Khach hang | Phan tich customer value, payment quality, credit behavior |
+| `dim_product` | San pham | Phan tich san pham ban chay, margin, fill rate |
+| `bridge_product_stock_group` | Quan he product-stock group | Ho tro mot product thuoc nhieu stock group |
 
-Dimension quan trọng nhất cho scope hiện tại là `dim_date`, `dim_customer`, `dim_product`, `dim_city`, `dim_customer_category`, `dim_buying_group`, `dim_supplier` và `dim_stock_group`. Các dimension còn lại hỗ trợ phân tích sâu hơn về fulfillment, thanh toán và phân loại giao dịch.
+## Detail Facts
 
-## Fact Sales Invoice Line
+### `fact_sales_invoice_line`
 
-Grain: một dòng hóa đơn bán hàng, tương ứng `Sales.InvoiceLines`.
+Grain: 1 dong hoa don ban hang.
 
-Nguồn chính:
+Nguon chinh:
 
-- `Sales_InvoiceLines`
-- `Sales_Invoices`
-- `Sales_Customers`
-- `Warehouse_StockItems`
+- `staging.stg_sales_invoice_lines`
+- `staging.stg_sales_invoices`
 
-| Measure | Ý nghĩa | Công thức | Trường nguồn |
-|---|---|---|---|
-| `quantity_sold` | Số lượng bán ở dòng hóa đơn | `Quantity` | `Sales_InvoiceLines.Quantity` |
-| `revenue_ex_tax` | Doanh thu chưa gồm thuế | `ExtendedPrice - TaxAmount` | `ExtendedPrice`, `TaxAmount` |
-| `tax_amount` | Thuế của dòng hóa đơn | `TaxAmount` | `TaxAmount` |
-| `revenue_inc_tax` | Doanh thu gồm thuế | `ExtendedPrice` | `ExtendedPrice` |
-| `gross_profit` | Lợi nhuận gộp dòng hàng | `LineProfit` | `LineProfit` |
-| `estimated_cogs` | Giá vốn ước tính | `revenue_ex_tax - gross_profit` | `ExtendedPrice`, `TaxAmount`, `LineProfit` |
-| `gross_margin_pct` | Biên lợi nhuận gộp | `gross_profit / revenue_ex_tax` | Measure đã tính |
-| `average_selling_price_ex_tax` | Giá bán bình quân chưa thuế | `revenue_ex_tax / quantity_sold` | Measure đã tính |
-| `profit_per_unit` | Lợi nhuận gộp trên mỗi đơn vị | `gross_profit / quantity_sold` | Measure đã tính |
+Dimension lien quan:
 
-Lưu ý: `ExtendedPrice` trong dữ liệu WWI đã bao gồm thuế. Ví dụ dòng đầu tiên có `Quantity * UnitPrice = 2300`, `TaxAmount = 345`, `ExtendedPrice = 2645`.
+- `dim_date` qua `invoice_date_key`
+- `dim_customer` qua `customer_key`, `bill_to_customer_key`
+- `dim_product` qua `product_key`
+- `dim_package_type` qua `package_type_key`
+- `dim_person` qua `salesperson_key`
 
-Phân tích phù hợp:
+Measures:
 
-- Sản phẩm nào tạo doanh thu và lợi nhuận cao nhất.
-- Nhóm khách hàng nào có biên lợi nhuận tốt nhất.
-- Khu vực nào bán tốt nhưng biên lợi nhuận thấp.
-- Supplier hoặc stock group nào đóng góp lợi nhuận tốt.
-- Doanh thu, lợi nhuận và biên lợi nhuận theo tháng/quý/năm.
-
-## Fact Order Fulfillment Line
-
-Grain: một dòng đơn hàng, tương ứng `Sales.OrderLines`.
-
-Nguồn chính:
-
-- `Sales_OrderLines`
-- `Sales_Orders`
-- `Sales_Customers`
-- `Warehouse_StockItems`
-
-| Measure | Ý nghĩa | Công thức | Trường nguồn |
-|---|---|---|---|
-| `ordered_quantity` | Số lượng khách đặt | `Quantity` | `Sales_OrderLines.Quantity` |
-| `picked_quantity` | Số lượng đã pick | `PickedQuantity` | `Sales_OrderLines.PickedQuantity` |
-| `unpicked_quantity` | Số lượng chưa pick | `Quantity - PickedQuantity` | `Quantity`, `PickedQuantity` |
-| `fill_rate` | Tỷ lệ đáp ứng dòng hàng | `PickedQuantity / Quantity` | Measure đã tính |
-| `picking_lead_time_hours` | Thời gian từ ngày đặt đến lúc pick xong | `PickingCompletedWhen - OrderDate`, quy đổi giờ | `PickingCompletedWhen`, `OrderDate` |
-| `expected_delivery_lead_days` | Lead time giao hàng dự kiến | `ExpectedDeliveryDate - OrderDate` | `ExpectedDeliveryDate`, `OrderDate` |
-| `is_undersupply_backordered` | Có backorder do thiếu hàng không | `IsUndersupplyBackordered` | `Sales_Orders.IsUndersupplyBackordered` |
-| `is_fully_picked` | Dòng hàng đã pick đủ chưa | `PickedQuantity >= Quantity` | `PickedQuantity`, `Quantity` |
-
-Phân tích phù hợp:
-
-- Sản phẩm nào có nhu cầu đặt cao nhưng fill rate thấp.
-- Nhóm khách hàng nào thường có đơn hàng chưa được đáp ứng đủ.
-- Việc fulfill kém có đi kèm doanh thu/lợi nhuận thấp hơn không.
-- Sản phẩm hoặc stock group nào thường phát sinh backorder.
-
-## Fact Customer Transaction
-
-Grain: một giao dịch công nợ khách hàng, tương ứng `Sales.CustomerTransactions`.
-
-Nguồn chính:
-
-- `Sales_CustomerTransactions`
-- `Sales_Customers`
-- `Application_PaymentMethods`
-- `Application_TransactionTypes`
-
-| Measure | Ý nghĩa | Công thức | Trường nguồn |
-|---|---|---|---|
-| `receivable_ex_tax` | Giá trị giao dịch chưa thuế | `AmountExcludingTax` | `AmountExcludingTax` |
-| `receivable_tax_amount` | Thuế của giao dịch | `TaxAmount` | `TaxAmount` |
-| `receivable_inc_tax` | Giá trị giao dịch gồm thuế | `TransactionAmount` | `TransactionAmount` |
-| `outstanding_amount` | Số tiền còn chưa tất toán | `OutstandingBalance` | `OutstandingBalance` |
-| `paid_amount` | Số tiền đã thanh toán/tất toán | `TransactionAmount - OutstandingBalance` | `TransactionAmount`, `OutstandingBalance` |
-| `outstanding_ratio` | Tỷ lệ còn nợ | `OutstandingBalance / TransactionAmount` | Measure đã tính |
-| `days_to_collect` | Số ngày từ giao dịch đến tất toán | `FinalizationDate - TransactionDate` | `FinalizationDate`, `TransactionDate` |
-| `is_finalized` | Giao dịch đã tất toán hay chưa | `IsFinalized` | `IsFinalized` |
-| `is_overdue` | Có trả chậm so với điều khoản không | `days_to_collect > dim_customer.payment_days` | Measure + `payment_days` |
-
-Phân tích phù hợp:
-
-- Khách hàng hoặc nhóm khách hàng nào tạo doanh thu cao nhưng trả chậm.
-- Nhóm khách hàng nào có tỷ lệ outstanding cao.
-- Doanh thu có lợi nhuận tốt nhưng chất lượng thu tiền kém nằm ở đâu.
-- Mối liên hệ giữa `payment_days`, `credit_limit`, `is_on_credit_hold` và trả chậm.
-
-## Chỉ Số Tổng Hợp
-
-| Chỉ số | Ý nghĩa | Công thức DWH |
+| Measure | Y nghia | Cong thuc |
 |---|---|---|
-| Total Revenue Ex Tax | Tổng doanh thu chưa thuế | `SUM(revenue_ex_tax)` |
-| Total Gross Profit | Tổng lợi nhuận gộp | `SUM(gross_profit)` |
-| Gross Margin | Biên lợi nhuận gộp | `SUM(gross_profit) / SUM(revenue_ex_tax)` |
-| Estimated COGS | Giá vốn ước tính | `SUM(estimated_cogs)` |
-| Average Selling Price | Giá bán bình quân | `SUM(revenue_ex_tax) / SUM(quantity_sold)` |
-| Profit Per Unit | Lợi nhuận bình quân mỗi đơn vị | `SUM(gross_profit) / SUM(quantity_sold)` |
-| Average Order Value | Giá trị trung bình mỗi hóa đơn | `SUM(revenue_ex_tax) / COUNT(DISTINCT source_invoice_id)` |
-| Fill Rate | Tỷ lệ đáp ứng đơn hàng | `SUM(picked_quantity) / SUM(ordered_quantity)` |
-| Backorder Rate | Tỷ lệ dòng đơn có backorder | `AVG(CASE WHEN is_undersupply_backordered THEN 1 ELSE 0 END)` |
-| Receivable Outstanding Ratio | Tỷ lệ công nợ còn lại | `SUM(outstanding_amount) / SUM(receivable_inc_tax)` |
-| Average Days To Collect | Số ngày thu tiền trung bình | `AVG(days_to_collect)` |
+| `quantity_sold` | So luong ban | `Sales_InvoiceLines.Quantity` |
+| `revenue_ex_tax` | Doanh thu chua thue | `ExtendedPrice - TaxAmount` |
+| `tax_amount` | Tien thue | `TaxAmount` |
+| `revenue_inc_tax` | Doanh thu gom thue | `ExtendedPrice` |
+| `gross_profit` | Loi nhuan gop | `LineProfit` |
+| `estimated_cogs` | Gia von uoc tinh | `revenue_ex_tax - gross_profit` |
+| `gross_margin_pct` | Bien loi nhuan gop | `gross_profit / revenue_ex_tax` |
+| `average_selling_price_ex_tax` | Gia ban trung binh chua thue | `revenue_ex_tax / quantity_sold` |
+| `profit_per_unit` | Loi nhuan gop moi don vi | `gross_profit / quantity_sold` |
 
-## Giả Định Có Thể Kiểm Định
+Phan tich phu hop:
 
-| Giả định | Cách kiểm định | Dữ liệu/measure |
+- San pham nao tao doanh thu va loi nhuan cao nhat.
+- Khach hang/nhom khach hang nao co gross margin tot.
+- Khu vuc nao ban nhieu nhung margin thap.
+- Supplier hoac stock group nao dong gop loi nhuan tot.
+- Salesperson nao tao doanh thu/loi nhuan cao.
+
+### `fact_order_fulfillment_line`
+
+Grain: 1 dong don hang.
+
+Nguon chinh:
+
+- `staging.stg_sales_order_lines`
+- `staging.stg_sales_orders`
+
+Dimension lien quan:
+
+- `dim_date` qua `order_date_key`, `expected_delivery_date_key`, `picking_completed_date_key`
+- `dim_customer` qua `customer_key`
+- `dim_product` qua `product_key`
+- `dim_package_type` qua `package_type_key`
+- `dim_person` qua `salesperson_key`, `picker_key`
+
+Measures:
+
+| Measure | Y nghia | Cong thuc |
 |---|---|---|
-| Nhóm sản phẩm có `gross_margin_pct` cao tạo lợi nhuận ổn định hơn nhóm margin thấp | So sánh `gross_profit`, `quantity_sold`, `revenue_ex_tax` theo stock group/product | `fact_sales_invoice_line`, `dim_product`, `dim_stock_group` |
-| Khu vực có doanh thu cao chưa chắc có biên lợi nhuận cao | So sánh `revenue_ex_tax` và `gross_margin_pct` theo city/state/country | `fact_sales_invoice_line`, `dim_city` |
-| Sản phẩm có fill rate thấp làm giảm doanh thu thực nhận hoặc lợi nhuận | So sánh `fill_rate` với `revenue_ex_tax`, `gross_profit` theo product/stock group | `fact_order_fulfillment_line`, `fact_sales_invoice_line` |
-| Khách hàng có doanh thu/lợi nhuận cao chưa chắc có chất lượng thu tiền tốt | So sánh `gross_profit`, `days_to_collect`, `outstanding_ratio` theo customer/category | `fact_sales_invoice_line`, `fact_customer_transaction` |
-| Khách hàng có `payment_days` dài hoặc `is_on_credit_hold = true` dễ trả chậm hơn | Logistic regression hoặc chi-square với label `is_overdue` | `fact_customer_transaction`, `dim_customer` |
+| `ordered_quantity` | So luong khach dat | `Sales_OrderLines.Quantity` |
+| `picked_quantity` | So luong da pick | `Sales_OrderLines.PickedQuantity` |
+| `unpicked_quantity` | So luong chua pick | `ordered_quantity - picked_quantity` |
+| `fill_rate` | Ty le dap ung dong hang | `picked_quantity / ordered_quantity` |
+| `picking_lead_time_hours` | Gio tu ngay dat den luc pick xong | `PickingCompletedWhen - OrderDate` |
+| `expected_delivery_lead_days` | So ngay giao du kien | `ExpectedDeliveryDate - OrderDate` |
+| `is_undersupply_backordered` | Co backorder do thieu hang | Tu `Sales_Orders.IsUndersupplyBackordered` |
+| `is_fully_picked` | Dong hang da pick du | `picked_quantity >= ordered_quantity` |
 
-## ML Phù Hợp Với Scope Này
+Phan tich phu hop:
 
-1. Dự báo doanh thu hoặc số lượng bán theo sản phẩm-tháng.
-   - Target: `SUM(quantity_sold)` hoặc `SUM(revenue_ex_tax)` kỳ tiếp theo.
-   - Feature: lịch sử bán, stock group, supplier, unit price, gross margin, tháng/quý.
+- San pham nao co fill rate thap.
+- Stock group nao hay phat sinh backorder.
+- Picker/salesperson nao lien quan toi fulfillment cham.
+- Fulfillment kem co lien quan toi doanh thu/loi nhuan thap khong.
 
-2. Phân cụm khách hàng theo giá trị và chất lượng thu tiền.
-   - Feature: total revenue, gross profit, gross margin, số hóa đơn, average order value, days to collect, outstanding ratio.
+### `fact_customer_transaction`
 
-3. Dự đoán giao dịch/khách hàng có nguy cơ trả chậm.
-   - Target: `is_overdue`.
-   - Feature: payment days, credit limit, customer category, buying group, lịch sử outstanding ratio, lịch sử days to collect.
+Grain: 1 giao dich cong no khach hang.
 
-## Thứ Tự Triển Khai ETL
+Nguon chinh:
 
-1. Nạp `dim_date`.
-2. Nạp các dimension lookup: country, state province, city, customer category, buying group, delivery method, payment method, transaction type, package type, stock group, person.
-3. Nạp `dim_supplier`, `dim_customer`, `dim_product`, `bridge_product_stock_group`.
-4. Nạp `fact_sales_invoice_line`.
-5. Nạp `fact_order_fulfillment_line`.
-6. Nạp `fact_customer_transaction`.
+- `staging.stg_sales_customer_transactions`
+
+Dimension lien quan:
+
+- `dim_date` qua `transaction_date_key`, `finalization_date_key`, `due_date_key`
+- `dim_customer` qua `customer_key`
+- `dim_payment_method` qua `payment_method_key`
+- `dim_transaction_type` qua `transaction_type_key`
+
+Measures:
+
+| Measure | Y nghia | Cong thuc |
+|---|---|---|
+| `receivable_ex_tax` | Gia tri giao dich chua thue | `AmountExcludingTax` |
+| `receivable_tax_amount` | Thue cua giao dich | `TaxAmount` |
+| `receivable_inc_tax` | Gia tri giao dich gom thue | `TransactionAmount` |
+| `outstanding_amount` | So tien con chua tat toan | `OutstandingBalance` |
+| `paid_amount` | So tien da tat toan | `TransactionAmount - OutstandingBalance` |
+| `outstanding_ratio` | Ty le con no | `OutstandingBalance / TransactionAmount` |
+| `days_to_collect` | So ngay tu giao dich den tat toan | `FinalizationDate - TransactionDate` |
+| `collection_age_days` | Tuoi giao dich den ngay ETL/tat toan | `COALESCE(FinalizationDate, CURRENT_DATE) - TransactionDate` |
+| `days_past_due` | So ngay qua han | `GREATEST(collection_age_days - payment_days, 0)` |
+| `current_ar_amount` | AR con trong han | Outstanding neu chua qua han |
+| `past_due_amount` | AR da qua han | Outstanding neu qua han |
+| `is_finalized` | Da tat toan hay chua | `IsFinalized` |
+| `is_overdue` | Co qua han khong | `days_past_due > 0` |
+
+Phan tich phu hop:
+
+- Khach hang nao con outstanding cao.
+- Khach hang nao tra cham/qua han.
+- Payment method nao co outstanding ratio cao.
+- Loai giao dich nao thu tien cham.
+- Chat luong thu tien co lien quan den credit limit/payment days/credit hold khong.
+
+## Aggregate Facts
+
+Aggregate fact duoc tao tu fact chi tiet sau khi da load xong detail facts. Muc tieu la giu KPI tong hop o grain rieng, tranh lap du lieu tren invoice line/transaction.
+
+### `fact_business_kpi_month`
+
+Grain: 1 dong = 1 thang.
+
+Muc dich:
+
+- Dashboard KPI tong the theo thang.
+- Theo doi trend doanh thu, loi nhuan, gross margin, cong no, overdue.
+- Khong phu thuoc customer cu the.
+
+Khoa:
+
+| Field | Y nghia |
+|---|---|
+| `period_date_key` | Date key cua ngay dau thang |
+
+Sales KPIs:
+
+| KPI | Cong thuc |
+|---|---|
+| `revenue_ex_tax` | `SUM(fact_sales_invoice_line.revenue_ex_tax)` |
+| `revenue_inc_tax` | `SUM(fact_sales_invoice_line.revenue_inc_tax)` |
+| `gross_profit` | `SUM(fact_sales_invoice_line.gross_profit)` |
+| `estimated_cogs` | `SUM(fact_sales_invoice_line.estimated_cogs)` |
+| `quantity_sold` | `SUM(fact_sales_invoice_line.quantity_sold)` |
+| `invoice_count` | `COUNT(DISTINCT source_invoice_id)` |
+| `gross_margin_pct` | `gross_profit / revenue_ex_tax` |
+| `average_selling_price_ex_tax` | `revenue_ex_tax / quantity_sold` |
+| `profit_per_unit` | `gross_profit / quantity_sold` |
+| `average_order_value` | `revenue_ex_tax / invoice_count` |
+| `sales_growth_rate` | `(current_month_revenue - prior_month_revenue) / prior_month_revenue` |
+
+Receivable KPIs:
+
+| KPI | Cong thuc |
+|---|---|
+| `receivable_inc_tax` | `SUM(fact_customer_transaction.receivable_inc_tax)` |
+| `outstanding_amount` | `SUM(fact_customer_transaction.outstanding_amount)` |
+| `paid_amount` | `SUM(fact_customer_transaction.paid_amount)` |
+| `current_ar_amount` | `SUM(fact_customer_transaction.current_ar_amount)` |
+| `past_due_amount` | `SUM(fact_customer_transaction.past_due_amount)` |
+| `receivable_outstanding_ratio` | `SUM(outstanding_amount) / SUM(receivable_inc_tax)` |
+| `current_ar_ratio` | `SUM(current_ar_amount) / (SUM(current_ar_amount) + SUM(past_due_amount))` |
+| `average_days_to_collect` | `AVG(days_to_collect)` |
+| `average_collection_age_days` | `AVG(collection_age_days)` |
+| `average_days_past_due` | `AVG(days_past_due)` |
+| `overdue_transaction_rate` | `AVG(CASE WHEN is_overdue THEN 1 ELSE 0 END)` |
+
+### `fact_customer_kpi_month`
+
+Grain: 1 dong = 1 khach hang + 1 thang.
+
+Muc dich:
+
+- Dashboard customer performance.
+- Feature table cho ML phan cum khach hang.
+- So sanh customer theo gia tri, loi nhuan, cong no va hanh vi tra tien.
+
+Khoa:
+
+| Field | Y nghia |
+|---|---|
+| `customer_key` | Khach hang trong `dim_customer` |
+| `period_date_key` | Date key cua ngay dau thang |
+
+KPIs:
+
+| KPI | Y nghia |
+|---|---|
+| `revenue_ex_tax`, `revenue_inc_tax` | Doanh thu cua customer trong thang |
+| `gross_profit`, `gross_margin_pct` | Loi nhuan va bien loi nhuan cua customer |
+| `estimated_cogs` | Gia von uoc tinh |
+| `quantity_sold` | Tong so luong mua |
+| `invoice_count` | So hoa don phat sinh |
+| `average_order_value` | Gia tri trung binh moi hoa don |
+| `sales_growth_rate` | Tang truong doanh thu customer so voi thang truoc |
+| `outstanding_amount` | Tong cong no con lai |
+| `current_ar_amount` | Cong no con trong han |
+| `past_due_amount` | Cong no qua han |
+| `receivable_outstanding_ratio` | Ty le cong no con lai tren receivable |
+| `current_ar_ratio` | Ty le AR trong han |
+| `average_days_to_collect` | So ngay thu tien trung binh |
+| `average_days_past_due` | So ngay qua han trung binh |
+| `overdue_transaction_rate` | Ty le giao dich qua han |
+
+## KPI Tu METRICS.docx Co The Dung
+
+| KPI | Trang thai | Noi dung trong DWH |
+|---|---|---|
+| Gross Profit Margin | Dung duoc | `gross_margin_pct` trong sales fact va aggregate facts |
+| Sales Growth Rate | Dung duoc | `sales_growth_rate` trong aggregate facts |
+| Accounts Receivable / Current AR Ratio | Dung duoc dang proxy | `current_ar_ratio`, `current_ar_amount`, `past_due_amount` |
+| AR Turnover | Dung duoc dang proxy | Co sales va outstanding, nhung khong co AR binh quan chuan dau/cuoi ky |
+| DSO / Average Days To Collect | Dung duoc | `average_days_to_collect`, `days_to_collect` |
+| Inventory Turnover / DIO | Chua du | Thieu inventory balance binh quan trong DWH hien tai |
+| Cash Conversion Cycle | Chua du | Thieu DIO va DPO |
+| Current Ratio / Quick Ratio / Cash Ratio | Khong du | Thieu current assets, liabilities, cash |
+| Net Profit Margin / ROA / ROE / EPS / P/E / P/B | Khong du | Thieu bao cao tai chinh, net income, equity, shares, market price |
+| AP Turnover / DPO | Khong du | Chua co payable fact trong scope |
+
+## Chi So Tong Hop Nen Dung
+
+| Chi so | Cong thuc DWH |
+|---|---|
+| Total Revenue Ex Tax | `SUM(revenue_ex_tax)` |
+| Total Gross Profit | `SUM(gross_profit)` |
+| Gross Margin | `SUM(gross_profit) / SUM(revenue_ex_tax)` |
+| Estimated COGS | `SUM(estimated_cogs)` |
+| Average Selling Price | `SUM(revenue_ex_tax) / SUM(quantity_sold)` |
+| Profit Per Unit | `SUM(gross_profit) / SUM(quantity_sold)` |
+| Average Order Value | `SUM(revenue_ex_tax) / COUNT(DISTINCT source_invoice_id)` |
+| Fill Rate | `SUM(picked_quantity) / SUM(ordered_quantity)` |
+| Backorder Rate | `AVG(CASE WHEN is_undersupply_backordered THEN 1 ELSE 0 END)` |
+| Receivable Outstanding Ratio | `SUM(outstanding_amount) / SUM(receivable_inc_tax)` |
+| Current AR Ratio | `SUM(current_ar_amount) / (SUM(current_ar_amount) + SUM(past_due_amount))` |
+| Average Days To Collect | `AVG(days_to_collect)` |
+| Overdue Transaction Rate | `AVG(CASE WHEN is_overdue THEN 1 ELSE 0 END)` |
+
+## ML Phu Hop Voi Scope Nay
+
+### 1. Phan cum khach hang
+
+Nguon nen dung: `fact_customer_kpi_month` join voi `dim_customer`, `dim_customer_category`, `dim_buying_group`, `dim_city`.
+
+Feature goi y:
+
+- `revenue_ex_tax`
+- `gross_profit`
+- `gross_margin_pct`
+- `invoice_count`
+- `average_order_value`
+- `quantity_sold`
+- `outstanding_amount`
+- `receivable_outstanding_ratio`
+- `current_ar_ratio`
+- `average_days_to_collect`
+- `average_days_past_due`
+- `overdue_transaction_rate`
+- `credit_limit`
+- `payment_days`
+- `is_on_credit_hold`
+
+Cum co the dien giai:
+
+- High value, good payer.
+- High value, high overdue risk.
+- Low revenue, high margin.
+- Frequent buyer, low average order value.
+- Dormant/low activity customer.
+
+### 2. Du doan khach hang/giao dich co nguy co qua han
+
+Target goi y: `is_overdue` trong `fact_customer_transaction`.
+
+Feature:
+
+- `payment_days`, `credit_limit`, `is_on_credit_hold`
+- Customer category, buying group, city
+- Lich su outstanding ratio, days to collect, overdue rate
+- Payment method, transaction type
+
+### 3. Du bao doanh thu theo thang
+
+Nguon nen dung: `fact_business_kpi_month` hoac aggregate tu `fact_sales_invoice_line`.
+
+Target:
+
+- `revenue_ex_tax` thang tiep theo
+- Hoac `quantity_sold` thang tiep theo
+
+Feature:
+
+- Revenue lag theo thang
+- Quantity lag theo thang
+- Gross margin
+- Invoice count
+- Month/quarter/year
+
+## Thu Tu Trien Khai ETL
+
+1. Load `dim_date`.
+2. Load geography dimensions: `dim_country`, `dim_state_province`, `dim_city`.
+3. Load lookup dimensions: customer category, buying group, delivery method, payment method, transaction type, package type, stock group, person.
+4. Load `dim_supplier`, `dim_customer`, `dim_product`.
+5. Load `bridge_product_stock_group`.
+6. Load detail facts: `fact_sales_invoice_line`, `fact_order_fulfillment_line`, `fact_customer_transaction`.
+7. Load aggregate facts: `fact_business_kpi_month`, `fact_customer_kpi_month`.
+
