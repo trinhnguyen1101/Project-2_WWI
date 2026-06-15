@@ -1,0 +1,11 @@
+{
+  "engineRunConfiguration": {
+    "Local": {
+      "safe_mode": false
+    }
+  },
+  "name": "local",
+  "description": "Run workflows locally in the Hop runtime.",
+  "executionInfoLocationName": "",
+  "defaultSelection": true
+}

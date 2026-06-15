@@ -353,7 +353,8 @@
     "FontFixedName" : "Monospace",
     "WorkflowDialogStyle" : "RESIZE,MAX,MIN",
     "FontGraphStyle" : "0",
-    "LineWidth" : "1"
+    "LineWidth" : "1",
+    "AutoSave" : "N"
   },
   "googleDrive" : {
     "credentialsFile" : null,

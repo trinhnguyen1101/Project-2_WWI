@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pipeline>
+  <info>
+    <name>pl_fact_sales_invoice_line</name>
+    <name_sync_with_filename>Y</name_sync_with_filename>
+    <description>Load one row per sales invoice line with DWH surrogate keys.</description>
+    <extended_description>Load one row per sales invoice line with DWH surrogate keys.</extended_description>
+    <pipeline_version>1.0</pipeline_version>
+    <pipeline_type>Normal</pipeline_type>
+    <pipeline_status>0</pipeline_status>
+    <parameters>
+      <parameter>
+        <name>VALIDATE_ONLY</name>
+        <default_value>N</default_value>
+        <description>Set to Y to initialize and validate the pipeline without loading rows.</description>
+      </parameter>
+    </parameters>
+    <capture_transform_performance>N</capture_transform_performance>
+    <transform_performance_capturing_delay>1000</transform_performance_capturing_delay>
+    <transform_performance_capturing_size_limit>100</transform_performance_capturing_size_limit>
+    <created_user>Codex</created_user>
+    <created_date>2026/06/13 00:00:00.000</created_date>
+    <modified_user>Codex</modified_user>
+    <modified_date>2026/06/13 00:00:00.000</modified_date>
+  </info>
+  <notepads />
+  <order>
+    <hop>
+      <from>Read invoice lines</from>
+      <to>Lookup customer_key</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup customer_key</from>
+      <to>Lookup bill_to_customer_key</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup bill_to_customer_key</from>
+      <to>Lookup product_key</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup product_key</from>
+      <to>Lookup package_type_key</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup package_type_key</from>
+      <to>Lookup salesperson_key</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup salesperson_key</from>
+      <to>Upsert fact_sales_invoice_line</to>
+      <enabled>Y</enabled>
+    </hop>
+  </order>
+  <transform>
+    <name>Lookup customer_key</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cache_size>0</cache_size>
+    <cache>Y</cache>
+    <connection>postgres_dwh</connection>
+    <cache_load_all>Y</cache_load_all>
+    <lookup>
+      <schema>dwh</schema>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <fail_on_multiple>Y</fail_on_multiple>
+      <key>
+        <condition>=</condition>
+        <name>customer_id</name>
+        <field>source_customer_id</field>
+      </key>
+      <value>
+        <type>Integer</type>
+        <rename>customer_key</rename>
+        <name>customer_key</name>
+        <trim_type>none</trim_type>
+      </value>
+      <table>dim_customer</table>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>320</xloc>
+      <yloc>144</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Lookup bill_to_customer_key</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cache_size>0</cache_size>
+    <cache>Y</cache>
+    <connection>postgres_dwh</connection>
+    <cache_load_all>Y</cache_load_all>
+    <lookup>
+      <schema>dwh</schema>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <fail_on_multiple>Y</fail_on_multiple>
+      <key>
+        <condition>=</condition>
+        <name>bill_to_customer_id</name>
+        <field>source_customer_id</field>
+      </key>
+      <value>
+        <type>Integer</type>
+        <rename>bill_to_customer_key</rename>
+        <name>customer_key</name>
+        <trim_type>none</trim_type>
+      </value>
+      <table>dim_customer</table>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>544</xloc>
+      <yloc>144</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Lookup product_key</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cache_size>0</cache_size>
+    <cache>Y</cache>
+    <connection>postgres_dwh</connection>
+    <cache_load_all>Y</cache_load_all>
+    <lookup>
+      <schema>dwh</schema>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <fail_on_multiple>Y</fail_on_multiple>
+      <key>
+        <condition>=</condition>
+        <name>stock_item_id</name>
+        <field>source_stock_item_id</field>
+      </key>
+      <value>
+        <type>Integer</type>
+        <rename>product_key</rename>
+        <name>product_key</name>
+        <trim_type>none</trim_type>
+      </value>
+      <table>dim_product</table>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>768</xloc>
+      <yloc>144</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Lookup package_type_key</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cache_size>0</cache_size>
+    <cache>Y</cache>
+    <connection>postgres_dwh</connection>
+    <cache_load_all>Y</cache_load_all>
+    <lookup>
+      <schema>dwh</schema>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <fail_on_multiple>Y</fail_on_multiple>
+      <key>
+        <condition>=</condition>
+        <name>package_type_id</name>
+        <field>source_package_type_id</field>
+      </key>
+      <value>
+        <type>Integer</type>
+        <rename>package_type_key</rename>
+        <name>package_type_key</name>
+        <trim_type>none</trim_type>
+      </value>
+      <table>dim_package_type</table>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>992</xloc>
+      <yloc>144</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Lookup salesperson_key</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cache_size>0</cache_size>
+    <cache>Y</cache>
+    <connection>postgres_dwh</connection>
+    <cache_load_all>Y</cache_load_all>
+    <lookup>
+      <schema>dwh</schema>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <fail_on_multiple>Y</fail_on_multiple>
+      <key>
+        <condition>=</condition>
+        <name>salesperson_person_id</name>
+        <field>source_person_id</field>
+      </key>
+      <value>
+        <type>Integer</type>
+        <rename>salesperson_key</rename>
+        <name>person_key</name>
+        <trim_type>none</trim_type>
+      </value>
+      <table>dim_person</table>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>1216</xloc>
+      <yloc>144</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Read invoice lines</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>postgres_staging</connection>
+    <sql>SELECT
+    line.invoice_line_id AS source_invoice_line_id,
+    line.invoice_id AS source_invoice_id,
+    TO_CHAR(invoice.invoice_date, 'YYYYMMDD')::integer AS invoice_date_key,
+    invoice.customer_id,
+    invoice.bill_to_customer_id,
+    line.stock_item_id,
+    line.package_type_id,
+    invoice.salesperson_person_id,
+    line.quantity::numeric AS quantity_sold,
+    (line.extended_price - line.tax_amount)::numeric(18,2) AS revenue_ex_tax,
+    line.tax_amount::numeric(18,2) AS tax_amount,
+    line.extended_price::numeric(18,2) AS revenue_inc_tax,
+    line.line_profit::numeric(18,2) AS gross_profit,
+    ((line.extended_price - line.tax_amount) - line.line_profit)::numeric(18,2) AS estimated_cogs,
+    (line.line_profit / NULLIF(line.extended_price - line.tax_amount, 0))::numeric(18,6) AS gross_margin_pct,
+    ((line.extended_price - line.tax_amount) / NULLIF(line.quantity, 0))::numeric(18,6)
+        AS average_selling_price_ex_tax,
+    (line.line_profit / NULLIF(line.quantity, 0))::numeric(18,6) AS profit_per_unit
+FROM staging.stg_sales_invoice_lines line
+JOIN staging.stg_sales_invoices invoice
+  ON invoice.invoice_id = line.invoice_id
+WHERE '${VALIDATE_ONLY}' &lt;&gt; 'Y'
+ORDER BY line.invoice_line_id</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <attributes />
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>144</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Upsert fact_sales_invoice_line</name>
+    <type>InsertUpdate</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>postgres_dwh</connection>
+    <commit>5000</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema>dwh</schema>
+      <table>fact_sales_invoice_line</table>
+      <key>
+        <name>source_invoice_line_id</name>
+        <field>source_invoice_line_id</field>
+        <condition>=</condition>
+        <name2 />
+      </key>
+      <value>
+        <name>source_invoice_line_id</name>
+        <rename>source_invoice_line_id</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>source_invoice_id</name>
+        <rename>source_invoice_id</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>invoice_date_key</name>
+        <rename>invoice_date_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>customer_key</name>
+        <rename>customer_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>bill_to_customer_key</name>
+        <rename>bill_to_customer_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>product_key</name>
+        <rename>product_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>package_type_key</name>
+        <rename>package_type_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>salesperson_key</name>
+        <rename>salesperson_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>quantity_sold</name>
+        <rename>quantity_sold</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>revenue_ex_tax</name>
+        <rename>revenue_ex_tax</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>tax_amount</name>
+        <rename>tax_amount</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>revenue_inc_tax</name>
+        <rename>revenue_inc_tax</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>gross_profit</name>
+        <rename>gross_profit</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>estimated_cogs</name>
+        <rename>estimated_cogs</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>gross_margin_pct</name>
+        <rename>gross_margin_pct</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>average_selling_price_ex_tax</name>
+        <rename>average_selling_price_ex_tax</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>profit_per_unit</name>
+        <rename>profit_per_unit</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>1504</xloc>
+      <yloc>144</yloc>
+    </GUI>
+  </transform>
+  <transform_error_handling />
+  <attributes />
+</pipeline>

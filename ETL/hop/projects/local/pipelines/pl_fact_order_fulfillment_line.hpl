@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pipeline>
+  <info>
+    <name>pl_fact_order_fulfillment_line</name>
+    <name_sync_with_filename>Y</name_sync_with_filename>
+    <description>Load one row per order line with fulfillment measures.</description>
+    <extended_description>Load one row per order line with fulfillment measures.</extended_description>
+    <pipeline_version>1.0</pipeline_version>
+    <pipeline_type>Normal</pipeline_type>
+    <pipeline_status>0</pipeline_status>
+    <parameters>
+      <parameter>
+        <name>VALIDATE_ONLY</name>
+        <default_value>N</default_value>
+        <description>Set to Y to initialize and validate the pipeline without loading rows.</description>
+      </parameter>
+    </parameters>
+    <capture_transform_performance>N</capture_transform_performance>
+    <transform_performance_capturing_delay>1000</transform_performance_capturing_delay>
+    <transform_performance_capturing_size_limit>100</transform_performance_capturing_size_limit>
+    <created_user>Codex</created_user>
+    <created_date>2026/06/13 00:00:00.000</created_date>
+    <modified_user>Codex</modified_user>
+    <modified_date>2026/06/13 00:00:00.000</modified_date>
+  </info>
+  <notepads />
+  <order>
+    <hop>
+      <from>Read order lines</from>
+      <to>Lookup customer_key</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup customer_key</from>
+      <to>Lookup product_key</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup product_key</from>
+      <to>Lookup package_type_key</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup package_type_key</from>
+      <to>Lookup salesperson_key</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup salesperson_key</from>
+      <to>Lookup picker_key</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup picker_key</from>
+      <to>Upsert fact_order_fulfillment_line</to>
+      <enabled>Y</enabled>
+    </hop>
+  </order>
+  <transform>
+    <name>Lookup customer_key</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cache_size>0</cache_size>
+    <cache>Y</cache>
+    <connection>postgres_dwh</connection>
+    <cache_load_all>Y</cache_load_all>
+    <lookup>
+      <schema>dwh</schema>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <fail_on_multiple>Y</fail_on_multiple>
+      <key>
+        <condition>=</condition>
+        <name>customer_id</name>
+        <field>source_customer_id</field>
+      </key>
+      <value>
+        <type>Integer</type>
+        <rename>customer_key</rename>
+        <name>customer_key</name>
+        <trim_type>none</trim_type>
+      </value>
+      <table>dim_customer</table>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>320</xloc>
+      <yloc>144</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Lookup product_key</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cache_size>0</cache_size>
+    <cache>Y</cache>
+    <connection>postgres_dwh</connection>
+    <cache_load_all>Y</cache_load_all>
+    <lookup>
+      <schema>dwh</schema>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <fail_on_multiple>Y</fail_on_multiple>
+      <key>
+        <condition>=</condition>
+        <name>stock_item_id</name>
+        <field>source_stock_item_id</field>
+      </key>
+      <value>
+        <type>Integer</type>
+        <rename>product_key</rename>
+        <name>product_key</name>
+        <trim_type>none</trim_type>
+      </value>
+      <table>dim_product</table>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>544</xloc>
+      <yloc>144</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Lookup package_type_key</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cache_size>0</cache_size>
+    <cache>Y</cache>
+    <connection>postgres_dwh</connection>
+    <cache_load_all>Y</cache_load_all>
+    <lookup>
+      <schema>dwh</schema>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <fail_on_multiple>Y</fail_on_multiple>
+      <key>
+        <condition>=</condition>
+        <name>package_type_id</name>
+        <field>source_package_type_id</field>
+      </key>
+      <value>
+        <type>Integer</type>
+        <rename>package_type_key</rename>
+        <name>package_type_key</name>
+        <trim_type>none</trim_type>
+      </value>
+      <table>dim_package_type</table>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>768</xloc>
+      <yloc>144</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Lookup salesperson_key</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cache_size>0</cache_size>
+    <cache>Y</cache>
+    <connection>postgres_dwh</connection>
+    <cache_load_all>Y</cache_load_all>
+    <lookup>
+      <schema>dwh</schema>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <fail_on_multiple>Y</fail_on_multiple>
+      <key>
+        <condition>=</condition>
+        <name>salesperson_person_id</name>
+        <field>source_person_id</field>
+      </key>
+      <value>
+        <type>Integer</type>
+        <rename>salesperson_key</rename>
+        <name>person_key</name>
+        <trim_type>none</trim_type>
+      </value>
+      <table>dim_person</table>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>992</xloc>
+      <yloc>144</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Lookup picker_key</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cache_size>0</cache_size>
+    <cache>Y</cache>
+    <connection>postgres_dwh</connection>
+    <cache_load_all>Y</cache_load_all>
+    <lookup>
+      <schema>dwh</schema>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <fail_on_multiple>Y</fail_on_multiple>
+      <key>
+        <condition>=</condition>
+        <name>picked_by_person_id</name>
+        <field>source_person_id</field>
+      </key>
+      <value>
+        <type>Integer</type>
+        <rename>picker_key</rename>
+        <name>person_key</name>
+        <trim_type>none</trim_type>
+      </value>
+      <table>dim_person</table>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>1216</xloc>
+      <yloc>144</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Read order lines</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>postgres_staging</connection>
+    <sql>SELECT
+    line.order_line_id AS source_order_line_id,
+    line.order_id AS source_order_id,
+    TO_CHAR(orders.order_date, 'YYYYMMDD')::integer AS order_date_key,
+    TO_CHAR(orders.expected_delivery_date, 'YYYYMMDD')::integer AS expected_delivery_date_key,
+    CASE
+      WHEN line.picking_completed_when IS NULL THEN NULL
+      ELSE TO_CHAR(line.picking_completed_when::date, 'YYYYMMDD')::integer
+    END AS picking_completed_date_key,
+    orders.customer_id,
+    line.stock_item_id,
+    line.package_type_id,
+    orders.salesperson_person_id,
+    orders.picked_by_person_id,
+    line.quantity::numeric AS ordered_quantity,
+    line.picked_quantity::numeric AS picked_quantity,
+    COALESCE(line.unpicked_quantity, line.quantity - line.picked_quantity)::numeric AS unpicked_quantity,
+    COALESCE(
+      line.fill_rate,
+      line.picked_quantity::numeric / NULLIF(line.quantity, 0)
+    )::numeric(18,6) AS fill_rate,
+    CASE
+      WHEN line.picking_completed_when IS NULL THEN NULL
+      ELSE (
+        EXTRACT(EPOCH FROM (line.picking_completed_when - orders.order_date::timestamp)) / 3600
+      )::numeric(18,6)
+    END AS picking_lead_time_hours,
+    (orders.expected_delivery_date - orders.order_date)::integer AS expected_delivery_lead_days,
+    orders.is_undersupply_backordered,
+    COALESCE(line.is_fully_picked, line.picked_quantity &gt;= line.quantity) AS is_fully_picked
+FROM staging.stg_sales_order_lines line
+JOIN staging.stg_sales_orders orders
+  ON orders.order_id = line.order_id
+WHERE '${VALIDATE_ONLY}' &lt;&gt; 'Y'
+ORDER BY line.order_line_id</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <attributes />
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>144</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Upsert fact_order_fulfillment_line</name>
+    <type>InsertUpdate</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>postgres_dwh</connection>
+    <commit>5000</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema>dwh</schema>
+      <table>fact_order_fulfillment_line</table>
+      <key>
+        <name>source_order_line_id</name>
+        <field>source_order_line_id</field>
+        <condition>=</condition>
+        <name2 />
+      </key>
+      <value>
+        <name>source_order_line_id</name>
+        <rename>source_order_line_id</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>source_order_id</name>
+        <rename>source_order_id</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>order_date_key</name>
+        <rename>order_date_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>expected_delivery_date_key</name>
+        <rename>expected_delivery_date_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>picking_completed_date_key</name>
+        <rename>picking_completed_date_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>customer_key</name>
+        <rename>customer_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>product_key</name>
+        <rename>product_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>package_type_key</name>
+        <rename>package_type_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>salesperson_key</name>
+        <rename>salesperson_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>picker_key</name>
+        <rename>picker_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>ordered_quantity</name>
+        <rename>ordered_quantity</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>picked_quantity</name>
+        <rename>picked_quantity</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>unpicked_quantity</name>
+        <rename>unpicked_quantity</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>fill_rate</name>
+        <rename>fill_rate</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>picking_lead_time_hours</name>
+        <rename>picking_lead_time_hours</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>expected_delivery_lead_days</name>
+        <rename>expected_delivery_lead_days</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>is_undersupply_backordered</name>
+        <rename>is_undersupply_backordered</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>is_fully_picked</name>
+        <rename>is_fully_picked</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>1504</xloc>
+      <yloc>144</yloc>
+    </GUI>
+  </transform>
+  <transform_error_handling />
+  <attributes />
+</pipeline>
