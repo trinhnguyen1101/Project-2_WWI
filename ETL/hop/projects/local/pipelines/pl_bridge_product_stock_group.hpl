@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pipeline>
+  <info>
+    <name>pl_bridge_product_stock_group</name>
+    <name_sync_with_filename>Y</name_sync_with_filename>
+    <description>Load product / stock group bridge relationships.</description>
+    <extended_description>Load product / stock group bridge relationships.</extended_description>
+    <pipeline_version>1.0</pipeline_version>
+    <pipeline_type>Normal</pipeline_type>
+    <pipeline_status>0</pipeline_status>
+    <parameters />
+    <capture_transform_performance>N</capture_transform_performance>
+    <transform_performance_capturing_delay>1000</transform_performance_capturing_delay>
+    <transform_performance_capturing_size_limit>100</transform_performance_capturing_size_limit>
+    <created_user>Codex</created_user>
+    <created_date>2026/06/16 11:00:00.000</created_date>
+    <modified_user>Codex</modified_user>
+    <modified_date>2026/06/16 11:00:00.000</modified_date>
+  </info>
+  <notepads />
+  <order>
+    <hop>
+      <from>Read bridge rows</from>
+      <to>Lookup product_key</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup product_key</from>
+      <to>Lookup stock_group_key</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup stock_group_key</from>
+      <to>Upsert bridge_product_stock_group</to>
+      <enabled>Y</enabled>
+    </hop>
+  </order>
+  <transform>
+    <name>Read bridge rows</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>postgres_staging</connection>
+    <sql>SELECT
+    stock_item_id AS source_stock_item_id,
+    stock_group_id AS source_stock_group_id
+FROM staging.stg_warehouse_stock_item_stock_groups
+ORDER BY stock_item_stock_group_id</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <attributes />
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>144</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Lookup product_key</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cache_size>0</cache_size>
+    <cache>Y</cache>
+    <connection>postgres_dwh</connection>
+    <cache_load_all>Y</cache_load_all>
+    <lookup>
+      <schema>dwh</schema>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <fail_on_multiple>Y</fail_on_multiple>
+      <key>
+        <condition>=</condition>
+        <name>source_stock_item_id</name>
+        <field>source_stock_item_id</field>
+      </key>
+      <value>
+        <type>Integer</type>
+        <rename>product_key</rename>
+        <name>product_key</name>
+        <trim_type>none</trim_type>
+      </value>
+      <table>dim_product</table>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>352</xloc>
+      <yloc>96</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Lookup stock_group_key</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cache_size>0</cache_size>
+    <cache>Y</cache>
+    <connection>postgres_dwh</connection>
+    <cache_load_all>Y</cache_load_all>
+    <lookup>
+      <schema>dwh</schema>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <fail_on_multiple>Y</fail_on_multiple>
+      <key>
+        <condition>=</condition>
+        <name>source_stock_group_id</name>
+        <field>source_stock_group_id</field>
+      </key>
+      <value>
+        <type>Integer</type>
+        <rename>stock_group_key</rename>
+        <name>stock_group_key</name>
+        <trim_type>none</trim_type>
+      </value>
+      <table>dim_stock_group</table>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>576</xloc>
+      <yloc>96</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Upsert bridge_product_stock_group</name>
+    <type>InsertUpdate</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>postgres_dwh</connection>
+    <commit>1000</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema>dwh</schema>
+      <table>bridge_product_stock_group</table>
+      <key>
+        <name>product_key</name>
+        <field>product_key</field>
+        <condition>=</condition>
+        <name2>stock_group_key</name2>
+      </key>
+      <value>
+        <name>product_key</name>
+        <rename>product_key</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>stock_group_key</name>
+        <rename>stock_group_key</rename>
+        <update>N</update>
+      </value>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>800</xloc>
+      <yloc>96</yloc>
+    </GUI>
+  </transform>
+  <transform_error_handling />
+  <attributes />
+</pipeline>

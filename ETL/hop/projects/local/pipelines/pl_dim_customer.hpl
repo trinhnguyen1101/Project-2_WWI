@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pipeline>
+  <info>
+    <name>pl_dim_customer</name>
+    <name_sync_with_filename>Y</name_sync_with_filename>
+    <description>Load customers and resolve lookup surrogate keys for categories, buying groups, methods, and cities.</description>
+    <extended_description>Load customers and resolve lookup surrogate keys for categories, buying groups, methods, and cities.</extended_description>
+    <pipeline_version>1.0</pipeline_version>
+    <pipeline_type>Normal</pipeline_type>
+    <pipeline_status>0</pipeline_status>
+    <parameters />
+    <capture_transform_performance>N</capture_transform_performance>
+    <transform_performance_capturing_delay>1000</transform_performance_capturing_delay>
+    <transform_performance_capturing_size_limit>100</transform_performance_capturing_size_limit>
+    <created_user>Codex</created_user>
+    <created_date>2026/06/15 10:30:00.000</created_date>
+    <modified_user>Codex</modified_user>
+    <modified_date>2026/06/15 10:30:00.000</modified_date>
+  </info>
+  <notepads />
+  <order>
+    <hop>
+      <from>Read customer rows</from>
+      <to>Lookup customer_category_key</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup customer_category_key</from>
+      <to>Lookup buying_group_key</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup buying_group_key</from>
+      <to>Lookup delivery_method_key</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup delivery_method_key</from>
+      <to>Lookup delivery_city_key</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup delivery_city_key</from>
+      <to>Lookup postal_city_key</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Lookup postal_city_key</from>
+      <to>Upsert dim_customer</to>
+      <enabled>Y</enabled>
+    </hop>
+  </order>
+  <transform>
+    <name>Read customer rows</name>
+    <type>TableInput</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>postgres_staging</connection>
+    <sql>SELECT
+    customer_id AS source_customer_id,
+    customer_name,
+    customer_category_id,
+    buying_group_id,
+    delivery_method_id,
+    delivery_city_id,
+    postal_city_id,
+    credit_limit,
+    account_opened_date,
+    standard_discount_percentage,
+    is_statement_sent,
+    is_on_credit_hold,
+    payment_days,
+    phone_number,
+    website_url
+FROM staging.stg_sales_customers
+ORDER BY customer_id</sql>
+    <limit>0</limit>
+    <lookup />
+    <execute_each_row>N</execute_each_row>
+    <variables_active>Y</variables_active>
+    <attributes />
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>144</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Lookup customer_category_key</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cache_size>0</cache_size>
+    <cache>Y</cache>
+    <connection>postgres_dwh</connection>
+    <cache_load_all>Y</cache_load_all>
+    <lookup>
+      <schema>dwh</schema>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <fail_on_multiple>Y</fail_on_multiple>
+      <key>
+        <condition>=</condition>
+        <name>customer_category_id</name>
+        <field>source_customer_category_id</field>
+      </key>
+      <value>
+        <type>Integer</type>
+        <rename>customer_category_key</rename>
+        <name>customer_category_key</name>
+        <trim_type>none</trim_type>
+      </value>
+      <table>dim_customer_category</table>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>352</xloc>
+      <yloc>64</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Lookup buying_group_key</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cache_size>0</cache_size>
+    <cache>Y</cache>
+    <connection>postgres_dwh</connection>
+    <cache_load_all>Y</cache_load_all>
+    <lookup>
+      <schema>dwh</schema>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <fail_on_multiple>Y</fail_on_multiple>
+      <key>
+        <condition>=</condition>
+        <name>buying_group_id</name>
+        <field>source_buying_group_id</field>
+      </key>
+      <value>
+        <type>Integer</type>
+        <rename>buying_group_key</rename>
+        <name>buying_group_key</name>
+        <trim_type>none</trim_type>
+      </value>
+      <table>dim_buying_group</table>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>576</xloc>
+      <yloc>64</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Lookup delivery_method_key</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cache_size>0</cache_size>
+    <cache>Y</cache>
+    <connection>postgres_dwh</connection>
+    <cache_load_all>Y</cache_load_all>
+    <lookup>
+      <schema>dwh</schema>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <fail_on_multiple>Y</fail_on_multiple>
+      <key>
+        <condition>=</condition>
+        <name>delivery_method_id</name>
+        <field>source_delivery_method_id</field>
+      </key>
+      <value>
+        <type>Integer</type>
+        <rename>delivery_method_key</rename>
+        <name>delivery_method_key</name>
+        <trim_type>none</trim_type>
+      </value>
+      <table>dim_delivery_method</table>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>800</xloc>
+      <yloc>64</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Lookup delivery_city_key</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cache_size>0</cache_size>
+    <cache>Y</cache>
+    <connection>postgres_dwh</connection>
+    <cache_load_all>Y</cache_load_all>
+    <lookup>
+      <schema>dwh</schema>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <fail_on_multiple>Y</fail_on_multiple>
+      <key>
+        <condition>=</condition>
+        <name>delivery_city_id</name>
+        <field>source_city_id</field>
+      </key>
+      <value>
+        <type>Integer</type>
+        <rename>delivery_city_key</rename>
+        <name>city_key</name>
+        <trim_type>none</trim_type>
+      </value>
+      <table>dim_city</table>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>1024</xloc>
+      <yloc>64</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Lookup postal_city_key</name>
+    <type>DBLookup</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <cache_size>0</cache_size>
+    <cache>Y</cache>
+    <connection>postgres_dwh</connection>
+    <cache_load_all>Y</cache_load_all>
+    <lookup>
+      <schema>dwh</schema>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <fail_on_multiple>Y</fail_on_multiple>
+      <key>
+        <condition>=</condition>
+        <name>postal_city_id</name>
+        <field>source_city_id</field>
+      </key>
+      <value>
+        <type>Integer</type>
+        <rename>postal_city_key</rename>
+        <name>city_key</name>
+        <trim_type>none</trim_type>
+      </value>
+      <table>dim_city</table>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>1248</xloc>
+      <yloc>64</yloc>
+    </GUI>
+  </transform>
+  <transform>
+    <name>Upsert dim_customer</name>
+    <type>InsertUpdate</type>
+    <description />
+    <distribute>Y</distribute>
+    <custom_distribution />
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name />
+    </partitioning>
+    <connection>postgres_dwh</connection>
+    <commit>1000</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema>dwh</schema>
+      <table>dim_customer</table>
+      <key>
+        <name>source_customer_id</name>
+        <field>source_customer_id</field>
+        <condition>=</condition>
+        <name2 />
+      </key>
+      <value>
+        <name>source_customer_id</name>
+        <rename>source_customer_id</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>customer_name</name>
+        <rename>customer_name</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>customer_category_key</name>
+        <rename>customer_category_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>buying_group_key</name>
+        <rename>buying_group_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>delivery_method_key</name>
+        <rename>delivery_method_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>delivery_city_key</name>
+        <rename>delivery_city_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>postal_city_key</name>
+        <rename>postal_city_key</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>credit_limit</name>
+        <rename>credit_limit</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>account_opened_date</name>
+        <rename>account_opened_date</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>standard_discount_percentage</name>
+        <rename>standard_discount_percentage</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>is_statement_sent</name>
+        <rename>is_statement_sent</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>is_on_credit_hold</name>
+        <rename>is_on_credit_hold</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>payment_days</name>
+        <rename>payment_days</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>phone_number</name>
+        <rename>phone_number</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>website_url</name>
+        <rename>website_url</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <attributes />
+    <GUI>
+      <xloc>1472</xloc>
+      <yloc>96</yloc>
+    </GUI>
+  </transform>
+  <transform_error_handling />
+  <attributes />
+</pipeline>
