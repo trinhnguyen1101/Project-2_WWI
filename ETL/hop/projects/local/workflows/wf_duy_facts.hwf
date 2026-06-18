@@ -149,6 +149,62 @@
       <attributes_hac/>
     </action>
     <action>
+      <filename>${PROJECT_HOME}/pipelines/pl_fact_business_kpi_month.hpl</filename>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <create_parent_folder>N</create_parent_folder>
+      <set_logfile>N</set_logfile>
+      <set_append_logfile>N</set_append_logfile>
+      <logfile/>
+      <logext/>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <wait_until_finished>Y</wait_until_finished>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <run_configuration>local</run_configuration>
+      <name>fact_business_kpi_month</name>
+      <description/>
+      <type>PIPELINE</type>
+      <attributes/>
+      <xloc>352</xloc>
+      <yloc>224</yloc>
+      <parallel>N</parallel>
+      <attributes_hac/>
+    </action>
+    <action>
+      <filename>${PROJECT_HOME}/pipelines/pl_fact_customer_kpi_month.hpl</filename>
+      <params_from_previous>N</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <create_parent_folder>N</create_parent_folder>
+      <set_logfile>N</set_logfile>
+      <set_append_logfile>N</set_append_logfile>
+      <logfile/>
+      <logext/>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <wait_until_finished>Y</wait_until_finished>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <run_configuration>local</run_configuration>
+      <name>fact_customer_kpi_month</name>
+      <description/>
+      <type>PIPELINE</type>
+      <attributes/>
+      <xloc>352</xloc>
+      <yloc>320</yloc>
+      <parallel>N</parallel>
+      <attributes_hac/>
+    </action>
+    <action>
       <name>Success</name>
       <description/>
       <type>SUCCESS</type>
@@ -190,6 +246,20 @@
     </hop>
     <hop>
       <from>fact_customer_transaction</from>
+      <to>fact_business_kpi_month</to>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>fact_business_kpi_month</from>
+      <to>fact_customer_kpi_month</to>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>fact_customer_kpi_month</from>
       <to>Success</to>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
