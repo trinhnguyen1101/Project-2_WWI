@@ -3,15 +3,15 @@
     "POSTGRESQL": {
       "sshTunnelPort": "22",
       "sshTunnelUsePrivateKey": false,
-      "databaseName": "${POSTGRES_DWH_DB}",
+      "databaseName": "dwh",
       "pluginId": "POSTGRESQL",
       "sshTunnelEnabled": false,
       "accessType": 0,
       "sshTunnelUsername": "",
-      "hostname": "${POSTGRES_HOST}",
-      "password": "${POSTGRES_PASSWORD}",
+      "hostname": "host.docker.internal",
+      "password": "1101",
       "pluginName": "PostgreSQL",
-      "port": "${POSTGRES_PORT}",
+      "port": "5432",
       "sshTunnelHost": "",
       "attributes": {
         "SUPPORTS_TIMESTAMP_DATA_TYPE": "Y",
@@ -27,7 +27,7 @@
       "sshTunnelPassphrase": "Encrypted ",
       "sshTunnelPassword": "Encrypted ",
       "sshTunnelPrivateKeyFile": "",
-      "username": "${POSTGRES_USER}"
+      "username": "postgres"
     }
   },
   "name": "postgres_dwh"

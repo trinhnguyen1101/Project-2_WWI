@@ -354,7 +354,7 @@
     "WorkflowDialogStyle" : "RESIZE,MAX,MIN",
     "FontGraphStyle" : "0",
     "LineWidth" : "1",
-    "AutoSave" : "N"
+    "AutoSave" : "Y"
   },
   "googleDrive" : {
     "credentialsFile" : null,

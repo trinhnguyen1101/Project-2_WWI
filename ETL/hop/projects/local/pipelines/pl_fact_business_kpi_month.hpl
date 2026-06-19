@@ -1,42 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pipeline>
   <info>
+    <pipeline_version>1.0</pipeline_version>
+    <capture_transform_performance>N</capture_transform_performance>
+    <transform_performance_capturing_delay>1000</transform_performance_capturing_delay>
+    <transform_performance_capturing_size_limit>100</transform_performance_capturing_size_limit>
+    <pipeline_type>Normal</pipeline_type>
+    <pipeline_status>0</pipeline_status>
+    <parameters/>
     <name>pl_fact_business_kpi_month</name>
     <name_sync_with_filename>Y</name_sync_with_filename>
     <description>Load monthly business KPI aggregates from DWH fact tables.</description>
     <extended_description>Load monthly business KPI aggregates from DWH fact tables.</extended_description>
-    <pipeline_version>1.0</pipeline_version>
-    <pipeline_type>Normal</pipeline_type>
-    <pipeline_status>0</pipeline_status>
-    <parameters />
-    <capture_transform_performance>N</capture_transform_performance>
-    <transform_performance_capturing_delay>1000</transform_performance_capturing_delay>
-    <transform_performance_capturing_size_limit>100</transform_performance_capturing_size_limit>
     <created_user>Codex</created_user>
-    <created_date>2026/06/17 11:15:00.000</created_date>
     <modified_user>Codex</modified_user>
+    <created_date>2026/06/17 11:15:00.000</created_date>
     <modified_date>2026/06/17 11:15:00.000</modified_date>
   </info>
-  <notepads />
-  <order>
-    <hop>
-      <from>Generate monthly KPI rows</from>
-      <to>Upsert fact_business_kpi_month</to>
-      <enabled>Y</enabled>
-    </hop>
-  </order>
   <transform>
-    <name>Generate monthly KPI rows</name>
     <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>postgres_dwh</connection>
+    <name>Generate monthly KPI rows</name>
     <sql>WITH sales AS (
   SELECT
     dm.date_key AS period_date_key,
@@ -105,44 +88,40 @@ SELECT
   past_due_amount,
   CASE WHEN receivable_inc_tax = 0 THEN NULL ELSE outstanding_amount / receivable_inc_tax END AS receivable_outstanding_ratio,
   CASE WHEN (current_ar_amount + past_due_amount) = 0 THEN NULL ELSE current_ar_amount / NULLIF(current_ar_amount + past_due_amount, 0) END AS current_ar_ratio,
-  NULL AS average_days_to_collect,
-  NULL AS average_collection_age_days,
-  NULL AS average_days_past_due,
+  NULL::numeric AS average_days_to_collect,
+  NULL::numeric AS average_collection_age_days,
+  NULL::numeric AS average_days_past_due,
   overdue_transaction_rate
 FROM combined
 ORDER BY period_date_key</sql>
     <limit>0</limit>
-    <lookup />
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
-    <attributes />
+    <connection>postgres_dwh</connection>
+    <lookup/>
+    <sql_from_file/>
+    <distribute>Y</distribute>
+    <copies>1</copies>
     <GUI>
       <xloc>128</xloc>
       <yloc>144</yloc>
     </GUI>
-  </transform>
-  <transform>
-    <name>Upsert fact_business_kpi_month</name>
-    <type>InsertUpdate</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
+    <description/>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
-    <connection>postgres_dwh</connection>
-    <commit>1000</commit>
-    <update_bypassed>N</update_bypassed>
+    <attributes/>
+  </transform>
+  <transform>
+    <type>InsertUpdate</type>
+    <name>Upsert fact_business_kpi_month</name>
     <lookup>
-      <schema>dwh</schema>
-      <table>fact_business_kpi_month</table>
       <key>
         <name>period_date_key</name>
         <field>period_date_key</field>
         <condition>=</condition>
-        <name2 />
+        <name2/>
       </key>
       <value>
         <name>period_date_key</name>
@@ -254,13 +233,33 @@ ORDER BY period_date_key</sql>
         <rename>overdue_transaction_rate</rename>
         <update>Y</update>
       </value>
+      <schema>dwh</schema>
+      <table>fact_business_kpi_month</table>
     </lookup>
-    <attributes />
+    <commit>1000</commit>
+    <update_bypassed>N</update_bypassed>
+    <connection>postgres_dwh</connection>
+    <distribute>Y</distribute>
+    <copies>1</copies>
     <GUI>
       <xloc>448</xloc>
       <yloc>144</yloc>
     </GUI>
+    <description/>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <attributes/>
   </transform>
-  <transform_error_handling />
-  <attributes />
+  <order>
+    <hop>
+      <from>Generate monthly KPI rows</from>
+      <to>Upsert fact_business_kpi_month</to>
+      <enabled>Y</enabled>
+    </hop>
+  </order>
+  <notepads/>
+  <attributes/>
+  <transform_error_handling/>
 </pipeline>
