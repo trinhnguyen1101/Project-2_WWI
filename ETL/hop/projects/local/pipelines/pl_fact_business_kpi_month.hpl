@@ -21,79 +21,151 @@
     <type>TableInput</type>
     <name>Generate monthly KPI rows</name>
     <sql>WITH sales AS (
-  SELECT
-    dm.date_key AS period_date_key,
-    SUM(sil.revenue_ex_tax) AS revenue_ex_tax,
-    SUM(sil.revenue_inc_tax) AS revenue_inc_tax,
-    SUM(sil.gross_profit) AS gross_profit,
-    SUM(sil.estimated_cogs) AS estimated_cogs,
-    SUM(sil.quantity_sold) AS quantity_sold,
-    COUNT(DISTINCT sil.source_invoice_id) AS invoice_count
-  FROM dwh.fact_sales_invoice_line AS sil
-  JOIN dwh.dim_date AS dd
-    ON sil.invoice_date_key = dd.date_key
-  JOIN dwh.dim_date AS dm
-    ON dm.full_date = date_trunc('month', dd.full_date)
-  GROUP BY dm.date_key
-), receivable AS (
-  SELECT
-    dm.date_key AS period_date_key,
-    SUM(ct.receivable_inc_tax) AS receivable_inc_tax,
-    SUM(ct.outstanding_amount) AS outstanding_amount,
-    SUM(ct.paid_amount) AS paid_amount,
-    SUM(ct.current_ar_amount) AS current_ar_amount,
-    SUM(ct.past_due_amount) AS past_due_amount,
-    AVG(CASE WHEN ct.is_overdue THEN 1.0 ELSE 0.0 END) AS overdue_transaction_rate
-  FROM dwh.fact_customer_transaction AS ct
-  JOIN dwh.dim_date AS dd
-    ON ct.transaction_date_key = dd.date_key
-  JOIN dwh.dim_date AS dm
-    ON dm.full_date = date_trunc('month', dd.full_date)
-  GROUP BY dm.date_key
-), combined AS (
-  SELECT
-    COALESCE(s.period_date_key, r.period_date_key) AS period_date_key,
-    COALESCE(s.revenue_ex_tax, 0) AS revenue_ex_tax,
-    COALESCE(s.revenue_inc_tax, 0) AS revenue_inc_tax,
-    COALESCE(s.gross_profit, 0) AS gross_profit,
-    COALESCE(s.estimated_cogs, 0) AS estimated_cogs,
-    COALESCE(s.quantity_sold, 0) AS quantity_sold,
-    COALESCE(s.invoice_count, 0) AS invoice_count,
-    COALESCE(r.receivable_inc_tax, 0) AS receivable_inc_tax,
-    COALESCE(r.outstanding_amount, 0) AS outstanding_amount,
-    COALESCE(r.paid_amount, 0) AS paid_amount,
-    COALESCE(r.current_ar_amount, 0) AS current_ar_amount,
-    COALESCE(r.past_due_amount, 0) AS past_due_amount,
-    COALESCE(r.overdue_transaction_rate, 0) AS overdue_transaction_rate
-  FROM sales AS s
-  FULL OUTER JOIN receivable AS r
-    USING(period_date_key)
+    SELECT
+        dm.date_key AS period_date_key,
+        SUM(sil.revenue_ex_tax) AS revenue_ex_tax,
+        SUM(sil.revenue_inc_tax) AS revenue_inc_tax,
+        SUM(sil.gross_profit) AS gross_profit,
+        SUM(sil.estimated_cogs) AS estimated_cogs,
+        SUM(sil.quantity_sold) AS quantity_sold,
+        COUNT(DISTINCT sil.source_invoice_id) AS invoice_count
+    FROM dwh.fact_sales_invoice_line sil
+    JOIN dwh.dim_date dd
+        ON sil.invoice_date_key = dd.date_key
+    JOIN dwh.dim_date dm
+        ON dm.full_date = date_trunc('month', dd.full_date)
+    GROUP BY dm.date_key
+),
+
+receivable AS (
+    SELECT
+        dm.date_key AS period_date_key,
+
+        SUM(ct.receivable_inc_tax) AS receivable_inc_tax,
+        SUM(ct.outstanding_amount) AS outstanding_amount,
+        SUM(ct.paid_amount) AS paid_amount,
+        SUM(ct.current_ar_amount) AS current_ar_amount,
+        SUM(ct.past_due_amount) AS past_due_amount,
+
+        AVG(ct.days_to_collect) AS average_days_to_collect,
+        AVG(ct.collection_age_days) AS average_collection_age_days,
+        AVG(ct.days_past_due) AS average_days_past_due,
+
+        AVG(
+            CASE
+                WHEN ct.is_overdue THEN 1.0
+                ELSE 0.0
+            END
+        ) AS overdue_transaction_rate
+
+    FROM dwh.fact_customer_transaction ct
+    JOIN dwh.dim_date dd
+        ON ct.transaction_date_key = dd.date_key
+    JOIN dwh.dim_date dm
+        ON dm.full_date = date_trunc('month', dd.full_date)
+    GROUP BY dm.date_key
+),
+
+combined AS (
+    SELECT
+        COALESCE(s.period_date_key, r.period_date_key) AS period_date_key,
+
+        COALESCE(s.revenue_ex_tax, 0) AS revenue_ex_tax,
+        COALESCE(s.revenue_inc_tax, 0) AS revenue_inc_tax,
+        COALESCE(s.gross_profit, 0) AS gross_profit,
+        COALESCE(s.estimated_cogs, 0) AS estimated_cogs,
+        COALESCE(s.quantity_sold, 0) AS quantity_sold,
+        COALESCE(s.invoice_count, 0) AS invoice_count,
+
+        COALESCE(r.receivable_inc_tax, 0) AS receivable_inc_tax,
+        COALESCE(r.outstanding_amount, 0) AS outstanding_amount,
+        COALESCE(r.paid_amount, 0) AS paid_amount,
+        COALESCE(r.current_ar_amount, 0) AS current_ar_amount,
+        COALESCE(r.past_due_amount, 0) AS past_due_amount,
+
+        r.average_days_to_collect,
+        r.average_collection_age_days,
+        r.average_days_past_due,
+
+        COALESCE(r.overdue_transaction_rate, 0) AS overdue_transaction_rate
+
+    FROM sales s
+    FULL OUTER JOIN receivable r
+        USING (period_date_key)
 )
+
 SELECT
-  period_date_key,
-  revenue_ex_tax,
-  revenue_inc_tax,
-  gross_profit,
-  estimated_cogs,
-  quantity_sold,
-  invoice_count,
-  CASE WHEN revenue_ex_tax = 0 THEN NULL ELSE gross_profit / revenue_ex_tax END AS gross_margin_pct,
-  CASE WHEN quantity_sold = 0 THEN NULL ELSE revenue_ex_tax / quantity_sold END AS average_selling_price_ex_tax,
-  CASE WHEN quantity_sold = 0 THEN NULL ELSE gross_profit / quantity_sold END AS profit_per_unit,
-  CASE WHEN invoice_count = 0 THEN NULL ELSE revenue_ex_tax / invoice_count END AS average_order_value,
-  receivable_inc_tax,
-  outstanding_amount,
-  paid_amount,
-  current_ar_amount,
-  past_due_amount,
-  CASE WHEN receivable_inc_tax = 0 THEN NULL ELSE outstanding_amount / receivable_inc_tax END AS receivable_outstanding_ratio,
-  CASE WHEN (current_ar_amount + past_due_amount) = 0 THEN NULL ELSE current_ar_amount / NULLIF(current_ar_amount + past_due_amount, 0) END AS current_ar_ratio,
-  NULL::numeric AS average_days_to_collect,
-  NULL::numeric AS average_collection_age_days,
-  NULL::numeric AS average_days_past_due,
-  overdue_transaction_rate
+    period_date_key,
+
+    revenue_ex_tax,
+    revenue_inc_tax,
+    gross_profit,
+    estimated_cogs,
+    quantity_sold,
+    invoice_count,
+
+    CASE
+        WHEN revenue_ex_tax = 0 THEN NULL
+        ELSE gross_profit / revenue_ex_tax
+    END AS gross_margin_pct,
+
+    CASE
+        WHEN quantity_sold = 0 THEN NULL
+        ELSE revenue_ex_tax / quantity_sold
+    END AS average_selling_price_ex_tax,
+
+    CASE
+        WHEN quantity_sold = 0 THEN NULL
+        ELSE gross_profit / quantity_sold
+    END AS profit_per_unit,
+
+    CASE
+        WHEN invoice_count = 0 THEN NULL
+        ELSE revenue_ex_tax / invoice_count
+    END AS average_order_value,
+
+    LAG(revenue_ex_tax) OVER (
+        ORDER BY period_date_key
+    ) AS prior_month_revenue,
+
+    CASE
+        WHEN LAG(revenue_ex_tax) OVER (ORDER BY period_date_key) IS NULL
+            THEN NULL
+        WHEN LAG(revenue_ex_tax) OVER (ORDER BY period_date_key) = 0
+            THEN NULL
+        ELSE
+            (
+                revenue_ex_tax
+                - LAG(revenue_ex_tax) OVER (ORDER BY period_date_key)
+            )
+            /
+            LAG(revenue_ex_tax) OVER (ORDER BY period_date_key)
+    END AS sales_growth_rate,
+
+    receivable_inc_tax,
+    outstanding_amount,
+    paid_amount,
+    current_ar_amount,
+    past_due_amount,
+
+    CASE
+        WHEN receivable_inc_tax = 0 THEN NULL
+        ELSE outstanding_amount / receivable_inc_tax
+    END AS receivable_outstanding_ratio,
+
+    CASE
+        WHEN (current_ar_amount + past_due_amount) = 0 THEN NULL
+        ELSE current_ar_amount / (current_ar_amount + past_due_amount)
+    END AS current_ar_ratio,
+
+    average_days_to_collect,
+    average_collection_age_days,
+    average_days_past_due,
+
+    overdue_transaction_rate
+
 FROM combined
-ORDER BY period_date_key</sql>
+ORDER BY period_date_key;</sql>
     <limit>0</limit>
     <execute_each_row>N</execute_each_row>
     <variables_active>Y</variables_active>
