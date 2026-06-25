@@ -3,7 +3,7 @@
     "POSTGRESQL": {
       "sshTunnelPort": "22",
       "sshTunnelUsePrivateKey": false,
-      "databaseName": "dwh",
+      "databaseName": "Staging",
       "pluginId": "POSTGRESQL",
       "sshTunnelEnabled": false,
       "accessType": 0,

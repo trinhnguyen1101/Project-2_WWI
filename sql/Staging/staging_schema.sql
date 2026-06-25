@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_application_countries (
     border text,
     last_edited_by integer,
     valid_from timestamp(6),
-    valid_to timestamp(6)
+    valid_to timestamp(6),
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_application_state_provinces (
@@ -33,7 +34,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_application_state_provinces (
     latest_recorded_population bigint,
     last_edited_by integer,
     valid_from timestamp(6),
-    valid_to timestamp(6)
+    valid_to timestamp(6),
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_application_cities (
@@ -44,7 +46,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_application_cities (
     latest_recorded_population bigint,
     last_edited_by integer,
     valid_from timestamp(6),
-    valid_to timestamp(6)
+    valid_to timestamp(6),
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_application_delivery_methods (
@@ -52,7 +55,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_application_delivery_methods (
     delivery_method_name varchar(50) NOT NULL,
     last_edited_by integer,
     valid_from timestamp(6),
-    valid_to timestamp(6)
+    valid_to timestamp(6),
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_application_payment_methods (
@@ -60,7 +64,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_application_payment_methods (
     payment_method_name varchar(50) NOT NULL,
     last_edited_by integer,
     valid_from timestamp(6),
-    valid_to timestamp(6)
+    valid_to timestamp(6),
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_application_transaction_types (
@@ -68,7 +73,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_application_transaction_types (
     transaction_type_name varchar(50) NOT NULL,
     last_edited_by integer,
     valid_from timestamp(6),
-    valid_to timestamp(6)
+    valid_to timestamp(6),
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_application_people (
@@ -90,7 +96,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_application_people (
     valid_to timestamp(6),
     has_phone_number boolean,
     has_fax_number boolean,
-    has_email_address boolean
+    has_email_address boolean,
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_sales_customer_categories (
@@ -98,7 +105,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_sales_customer_categories (
     customer_category_name varchar(50) NOT NULL,
     last_edited_by integer,
     valid_from timestamp(6),
-    valid_to timestamp(6)
+    valid_to timestamp(6),
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_sales_buying_groups (
@@ -106,7 +114,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_sales_buying_groups (
     buying_group_name varchar(50) NOT NULL,
     last_edited_by integer,
     valid_from timestamp(6),
-    valid_to timestamp(6)
+    valid_to timestamp(6),
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_sales_customers (
@@ -142,7 +151,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_sales_customers (
     has_credit_limit boolean,
     has_buying_group boolean,
     has_alternate_contact_person boolean,
-    buying_group_for_analysis varchar(30)
+    buying_group_for_analysis varchar(30),
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_sales_invoices (
@@ -168,7 +178,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_sales_invoices (
     last_edited_when timestamp(6),
     has_confirmed_delivery_time boolean,
     has_confirmed_received_by boolean,
-    has_confirmed_delivery boolean
+    has_confirmed_delivery boolean,
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_sales_invoice_lines (
@@ -184,7 +195,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_sales_invoice_lines (
     line_profit numeric(18, 2) NOT NULL,
     extended_price numeric(18, 2) NOT NULL,
     last_edited_by integer,
-    last_edited_when timestamp(6)
+    last_edited_when timestamp(6),
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_sales_orders (
@@ -203,7 +215,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_sales_orders (
     last_edited_when timestamp(6),
     has_picker boolean,
     has_backorder_order boolean,
-    is_order_picking_completed boolean
+    is_order_picking_completed boolean,
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_sales_order_lines (
@@ -223,7 +236,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_sales_order_lines (
     unpicked_quantity integer,
     fill_rate numeric(18, 6),
     is_fully_picked boolean,
-    is_unpicked_line boolean
+    is_unpicked_line boolean,
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_sales_customer_transactions (
@@ -248,7 +262,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_sales_customer_transactions (
     payment_method_applicability varchar(50),
     invoice_applicability varchar(50),
     paid_amount numeric(18, 2),
-    outstanding_ratio numeric(18, 6)
+    outstanding_ratio numeric(18, 6),
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_purchasing_supplier_categories (
@@ -256,7 +271,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_purchasing_supplier_categories (
     supplier_category_name varchar(50) NOT NULL,
     last_edited_by integer,
     valid_from timestamp(6),
-    valid_to timestamp(6)
+    valid_to timestamp(6),
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_purchasing_suppliers (
@@ -288,7 +304,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_purchasing_suppliers (
     valid_from timestamp(6),
     valid_to timestamp(6),
     has_delivery_method boolean,
-    has_delivery_address_line1 boolean
+    has_delivery_address_line1 boolean,
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_warehouse_colors (
@@ -296,7 +313,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_warehouse_colors (
     color_name varchar(20) NOT NULL,
     last_edited_by integer,
     valid_from timestamp(6),
-    valid_to timestamp(6)
+    valid_to timestamp(6),
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_warehouse_package_types (
@@ -304,7 +322,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_warehouse_package_types (
     package_type_name varchar(50) NOT NULL,
     last_edited_by integer,
     valid_from timestamp(6),
-    valid_to timestamp(6)
+    valid_to timestamp(6),
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_warehouse_stock_groups (
@@ -312,7 +331,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_warehouse_stock_groups (
     stock_group_name varchar(50) NOT NULL,
     last_edited_by integer,
     valid_from timestamp(6),
-    valid_to timestamp(6)
+    valid_to timestamp(6),
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_warehouse_stock_items (
@@ -344,7 +364,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_warehouse_stock_items (
     size_for_analysis varchar(20),
     country_of_manufacture varchar(100),
     has_country_of_manufacture boolean,
-    tags_for_analysis text
+    tags_for_analysis text,
+    missing_field_count integer
 );
 
 CREATE TABLE IF NOT EXISTS staging.stg_warehouse_stock_item_stock_groups (
@@ -352,7 +373,8 @@ CREATE TABLE IF NOT EXISTS staging.stg_warehouse_stock_item_stock_groups (
     stock_item_id integer NOT NULL,
     stock_group_id integer NOT NULL,
     last_edited_by integer,
-    last_edited_when timestamp(6)
+    last_edited_when timestamp(6),
+    missing_field_count integer
 );
 
 -- Relationship-support indexes for validation and DWH loading.

@@ -20,6 +20,29 @@ services:
       retries: 5
     restart: unless-stopped
 
+  init-db:
+    image: python:3.9-slim
+    profiles:
+      - local-db
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./data:/app/data
+      - ./sql:/app/sql
+      - ./ETL:/app/ETL
+    working_dir: /app
+    environment:
+      PGHOST: postgres
+      PGPORT: 5432
+      PGDATABASE: ${POSTGRES_DB}
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+    command: >
+      bash -c "pip install psycopg2-binary &&
+               python ETL/init_db.py &&
+               python ETL/load_clean_missing_to_postgres.py --host postgres --user $$PGUSER --password $$PGPASSWORD --database $$PGDATABASE --csv-dir ./data/processed/clean_missing --schema-file ./sql/Staging/staging_schema.sql --recreate"
+
   hop-web:
     image: apache/hop-web:${HOP_VERSION}
     ports:
