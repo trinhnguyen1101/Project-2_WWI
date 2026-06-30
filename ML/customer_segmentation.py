@@ -1,6 +1,7 @@
 import os
 import argparse
 import pandas as pd
+import numpy as np
 from sqlalchemy import create_engine
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
@@ -57,49 +58,57 @@ def main():
         print("No data available to cluster.")
         return
 
-    # Select features for clustering
+    # Select focused features for RFM + Risk clustering
     features = [
-        'total_revenue', 'total_profit', 'avg_gross_margin', 
-        'total_invoices', 'avg_order_value', 'total_quantity', 
-        'total_outstanding', 'avg_days_to_collect', 
-        'avg_days_past_due', 'avg_overdue_rate'
+        'total_revenue', 'total_invoices', 'avg_gross_margin', 'avg_overdue_rate'
     ]
     
-    X = df[features]
+    # Copy DataFrame for manipulation
+    X = df[features].copy()
+    
+    # Apply log transformation to highly skewed features (revenue, invoices)
+    X['total_revenue_log'] = np.log1p(X['total_revenue'])
+    X['total_invoices_log'] = np.log1p(X['total_invoices'])
+    
+    # Use transformed features + unmodified bounded features
+    X_clustering = X[['total_revenue_log', 'total_invoices_log', 'avg_gross_margin', 'avg_overdue_rate']]
     
     # Scale features
     scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
+    X_scaled = scaler.fit_transform(X_clustering)
     
-    # K-Means clustering
-    k = args.clusters
+    # K-Means clustering (Fixed to 4 clusters to map exactly 4 business segments)
+    k = 4
     print(f"Applying K-Means with k={k}...")
     kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
     df['cluster'] = kmeans.fit_predict(X_scaled)
     
-    # Name clusters dynamically (simple heuristic based on revenue and overdue rate)
-    # This maps cluster labels to more meaningful business names
-    cluster_means = df.groupby('cluster')[['total_revenue', 'avg_overdue_rate']].mean()
+    # Analyze cluster centroids to assign meaningful business labels
+    cluster_means = df.groupby('cluster')[['total_revenue', 'total_invoices', 'avg_overdue_rate']].median()
     
-    # Rank clusters by revenue
-    revenue_ranks = cluster_means['total_revenue'].rank(ascending=False)
-    overdue_ranks = cluster_means['avg_overdue_rate'].rank(ascending=False)
+    # Guarantee exactly 4 distinct segments by ranking centroids
+    cluster_mapping = {}
     
-    def assign_segment(row):
-        cluster_id = row['cluster']
-        rev_rank = revenue_ranks[cluster_id]
-        od_rank = overdue_ranks[cluster_id]
-        
-        if rev_rank == 1 and od_rank > 2:
-            return "Khách hàng VIP"
-        elif rev_rank <= 2 and od_rank <= 2:
-            return "Giá trị cao, Rủi ro công nợ"
-        elif df[df['cluster'] == cluster_id]['total_invoices'].mean() > df['total_invoices'].mean():
-            return "Khách hàng mua thường xuyên"
-        else:
-            return "Khách hàng ít hoạt động"
-            
-    df['segment_name'] = df.apply(assign_segment, axis=1)
+    # 1. Khách hàng nợ xấu: Cụm có tỷ lệ quá hạn cao nhất
+    risk_cluster = cluster_means['avg_overdue_rate'].idxmax()
+    cluster_mapping[risk_cluster] = "Rủi ro Nợ xấu (Risk)"
+    
+    # 2. Khách hàng VIP: Doanh thu cao nhất trong số còn lại
+    remaining = [c for c in range(k) if c != risk_cluster]
+    vip_cluster = max(remaining, key=lambda c: cluster_means.loc[c, 'total_revenue'])
+    cluster_mapping[vip_cluster] = "Khách hàng VIP"
+    remaining.remove(vip_cluster)
+    
+    # 3. Nguy cơ Rời bỏ (Churn): Doanh thu/Tần suất thấp nhất trong 2 nhóm còn lại
+    churn_cluster = min(remaining, key=lambda c: cluster_means.loc[c, 'total_revenue'])
+    cluster_mapping[churn_cluster] = "Nguy cơ Rời bỏ (Churn)"
+    remaining.remove(churn_cluster)
+    
+    # 4. Khách hàng Tiềm năng: Nhóm cuối cùng
+    potential_cluster = remaining[0]
+    cluster_mapping[potential_cluster] = "Khách hàng Tiềm năng"
+    
+    df['segment_name'] = df['cluster'].map(cluster_mapping)
     
     # Save to CSV
     output_path = os.path.join(os.path.dirname(__file__), args.output)
