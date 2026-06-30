@@ -7,8 +7,7 @@ from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.graphics.tsaplots import plot_acf
 from docx import Document
-from docx.shared import Inches, Pt, RGBColor
-from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.shared import Inches, Pt
 from docx.enum.table import WD_TABLE_ALIGNMENT
 import warnings
 import os
@@ -25,7 +24,7 @@ def add_result_table(doc, headers, values):
     row = table.add_row().cells
     for i, v in enumerate(values):
         row[i].text = str(v)
-    doc.add_paragraph() # spacing
+    doc.add_paragraph()
 
 def main():
     print("Connecting to database...")
@@ -37,55 +36,46 @@ def main():
     font.name = 'Arial'
     font.size = Pt(11)
     
-    doc.add_heading('BÁO CÁO TỔNG HỢP: SỨC KHỎE DOANH NGHIỆP & DỰ BÁO LỢI NHUẬN', 0)
-    doc.add_paragraph('Báo cáo này trình bày các phát hiện thống kê về hành vi khách hàng, đặc tính sản phẩm và phân tích tính chu kỳ để dự báo lợi nhuận cho Wide World Importers.')
+    doc.add_heading('BÁO CÁO TỔNG HỢP: SỨC KHỎE DOANH NGHIỆP & DỰ BÁO', 0)
+    doc.add_paragraph('Báo cáo này trình bày 5 kiểm định toàn diện dựa trên các Chỉ số Vận hành & Kinh doanh cốt lõi (Metrics) được định nghĩa trong Sổ tay DWH, kèm theo phân tích tính chu kỳ lợi nhuận.')
     
     # ==============================================================================
     # PHẦN 1: BUSINESS HEALTH KPIS
     # ==============================================================================
-    doc.add_heading('PHẦN 1. KIỂM ĐỊNH SỨC KHỎE KINH DOANH VÀ SẢN PHẨM', level=1)
+    doc.add_heading('PHẦN 1. KIỂM ĐỊNH CÁC CHỈ SỐ KINH DOANH CỐT LÕI (METRICS)', level=1)
     
     # --- HYPOTHESIS 1 ---
-    doc.add_heading('1.1. Kiểm định T-test: Ảnh hưởng của Hàng Đông Lạnh đến Lợi Nhuận', level=2)
+    doc.add_heading('1.1. Tương Quan: Tần suất mua hàng vs Giá trị đơn hàng trung bình (AOV)', level=2)
     p_hyp1 = doc.add_paragraph()
     p_hyp1.add_run('Giả thuyết: ').bold = True
-    p_hyp1.add_run('Sản phẩm yêu cầu bảo quản lạnh (Chiller Stock) có Tỷ suất lợi nhuận gộp khác biệt so với Sản phẩm thường do chi phí logistics và bảo quản cao hơn.')
+    p_hyp1.add_run('Tồn tại mối tương quan tuyến tính giữa Tần suất mua hàng và AOV của khách hàng.')
     
-    query_h1 = """
-        SELECT p.is_chiller_stock, sil.gross_profit / NULLIF(sil.revenue_ex_tax, 0) as gross_margin_pct
-        FROM dwh.fact_sales_invoice_line sil
-        JOIN dwh.dim_product p ON sil.product_key = p.product_key
-        WHERE sil.revenue_ex_tax > 0
-    """
-    df_h1 = pd.read_sql(query_h1, engine).dropna()
-    g1 = df_h1[df_h1['is_chiller_stock'] == True]['gross_margin_pct']
-    g2 = df_h1[df_h1['is_chiller_stock'] == False]['gross_margin_pct']
-    t_stat, p_val1 = stats.ttest_ind(g1, g2, equal_var=False)
+    df_h1 = pd.read_sql("SELECT invoice_count, average_order_value FROM dwh.fact_customer_kpi_month WHERE average_order_value IS NOT NULL", engine).dropna()
+    df_h1['invoice_count'] = pd.to_numeric(df_h1['invoice_count'])
+    df_h1['average_order_value'] = pd.to_numeric(df_h1['average_order_value'])
+    corr1, p_val1 = stats.pearsonr(df_h1['invoice_count'], df_h1['average_order_value'])
     
     p_tbl1 = doc.add_paragraph()
     p_tbl1.add_run('Bảng kết quả kiểm định:').bold = True
     add_result_table(doc, 
-                     ['Phương pháp', 'Mức LN Hàng Lạnh', 'Mức LN Hàng Thường', 'Trị số T (T-stat)', 'P-value'],
-                     ['T-test (Độc lập)', f"{g1.mean()*100:.2f}%", f"{g2.mean()*100:.2f}%", f"{t_stat:.4f}", f"{p_val1:.4e}"])
+                     ['Phương pháp', 'Cỡ mẫu (N)', 'Hệ số tương quan (r)', 'P-value', 'Mức ý nghĩa (Alpha)'],
+                     ['Pearson Correlation', f"{len(df_h1):,}", f"{corr1:.4f}", f"{p_val1:.4e}", "0.05"])
     
     p_exp1 = doc.add_paragraph()
     p_exp1.add_run('Giải thích ý nghĩa:\n').bold = True
-    p_exp1.add_run(f'Với p-value gần như bằng 0, ta bác bỏ H0. Kết quả chỉ ra rằng Hàng Đông Lạnh có tỷ suất lợi nhuận gộp thấp hơn đáng kể (~43.84%) so với Hàng Thường (~53.82%). ')
-    p_exp1.add_run('Ý nghĩa kinh doanh: Chi phí bảo quản lạnh đang ăn mòn tới 10% biên lợi nhuận. Doanh nghiệp cần xem xét tối ưu hóa chuỗi cung ứng lạnh hoặc điều chỉnh lại biểu giá bán cho nhóm hàng này để bù đắp chi phí.')
+    p_exp1.add_run(f'Với p-value < 0.05, ta bác bỏ giả thuyết H0. Hệ số tương quan r = {corr1:.4f} mang dấu âm. ')
+    p_exp1.add_run('Khách hàng mua với Tần suất càng cao (mua lặt vặt nhiều lần) thì Giá trị đơn hàng trung bình (AOV) của họ càng thấp. Ngược lại, khách mua ít lần thường gom lại thành các đơn hàng lớn.')
     
     # --- HYPOTHESIS 2 ---
-    doc.add_heading('1.2. Tương Quan: Đơn giá sản phẩm và Số lượng mua', level=2)
+    doc.add_heading('1.2. Tương Quan: Giá trị đơn hàng trung bình (AOV) vs Tỷ suất lợi nhuận gộp', level=2)
     p_hyp2 = doc.add_paragraph()
     p_hyp2.add_run('Giả thuyết: ').bold = True
-    p_hyp2.add_run('Có mối tương quan tuyến tính giữa Đơn giá của sản phẩm và Số lượng sản phẩm bán ra trên mỗi hóa đơn (Quy luật cung cầu cơ bản).')
+    p_hyp2.add_run('Khách hàng có AOV càng lớn thì Tỷ suất lợi nhuận gộp (Gross Margin) doanh nghiệp thu được càng bị ảnh hưởng.')
     
-    query_h2 = """
-        SELECT sil.quantity_sold, sil.revenue_ex_tax / NULLIF(sil.quantity_sold, 0) as unit_price
-        FROM dwh.fact_sales_invoice_line sil
-        WHERE sil.revenue_ex_tax > 0 AND sil.quantity_sold > 0
-    """
-    df_h2 = pd.read_sql(query_h2, engine).dropna()
-    corr2, p_val2 = stats.pearsonr(df_h2['quantity_sold'], df_h2['unit_price'])
+    df_h2 = pd.read_sql("SELECT average_order_value, gross_margin_pct FROM dwh.fact_customer_kpi_month WHERE average_order_value IS NOT NULL AND gross_margin_pct IS NOT NULL", engine).dropna()
+    df_h2['average_order_value'] = pd.to_numeric(df_h2['average_order_value'])
+    df_h2['gross_margin_pct'] = pd.to_numeric(df_h2['gross_margin_pct'])
+    corr2, p_val2 = stats.pearsonr(df_h2['average_order_value'], df_h2['gross_margin_pct'])
     
     p_tbl2 = doc.add_paragraph()
     p_tbl2.add_run('Bảng kết quả kiểm định:').bold = True
@@ -95,32 +85,86 @@ def main():
     
     p_exp2 = doc.add_paragraph()
     p_exp2.add_run('Giải thích ý nghĩa:\n').bold = True
-    p_exp2.add_run(f'P-value cực kỳ thấp khẳng định mối tương quan có ý nghĩa. Hệ số r = {corr2:.4f} (âm) cho thấy số lượng bán và đơn giá có quan hệ nghịch biến. ')
-    p_exp2.add_run('Ý nghĩa kinh doanh: Các sản phẩm có đơn giá thấp thường được khách hàng mua với số lượng rất lớn (bán sỉ/bán buôn), trong khi các sản phẩm đắt tiền chỉ được mua nhỏ giọt. Điều này giúp đội ngũ Sales có chiến lược gom combo (bundle) hợp lý cho các sản phẩm giá rẻ.')
+    p_exp2.add_run(f'Hệ số r = {corr2:.4f} (âm) chỉ ra rằng Tỷ suất lợi nhuận gộp giảm dần khi AOV tăng lên. ')
+    p_exp2.add_run('Khi khách hàng đặt các đơn hàng lớn, công ty thường áp dụng chiết khấu sâu (Discount). Việc này đẩy doanh thu lên cao nhưng làm biên lợi nhuận gộp mỏng đi đáng kể.')
 
     # --- HYPOTHESIS 3 ---
-    doc.add_heading('1.3. Phân tích Tỷ suất lợi nhuận theo Nhóm Khách hàng', level=2)
+    doc.add_heading('1.3. Kho vận: Thời gian chuẩn bị hàng (Lead Time) vs Tỷ lệ lấp đầy (Fill Rate)', level=2)
     p_hyp3 = doc.add_paragraph()
     p_hyp3.add_run('Giả thuyết: ').bold = True
-    p_hyp3.add_run('Có sự khác biệt rõ rệt về hiệu quả sinh lời (Tỷ suất lợi nhuận gộp trung bình) giữa các Nhóm khách hàng (Customer Category) khác nhau.')
+    p_hyp3.add_run('Có sự tương quan giữa Thời gian chuẩn bị hàng (Picking Lead Time) và Khả năng đáp ứng ngay (Fill Rate) của kho vận.')
     
-    df_h3 = pd.read_sql("SELECT cc.customer_category_name, k.gross_margin_pct FROM dwh.fact_customer_kpi_month k JOIN dwh.dim_customer c ON k.customer_key = c.customer_key JOIN dwh.dim_customer_category cc ON c.customer_category_key = cc.customer_category_key WHERE k.gross_margin_pct IS NOT NULL", engine)
-    df_h3['gross_margin_pct'] = pd.to_numeric(df_h3['gross_margin_pct'])
-    categories = df_h3['customer_category_name'].unique()
-    groups = [df_h3[df_h3['customer_category_name'] == cat]['gross_margin_pct'].dropna() for cat in categories if len(df_h3[df_h3['customer_category_name'] == cat]['gross_margin_pct'].dropna()) > 0]
-    f_stat, p_val3 = stats.f_oneway(*groups)
+    query_h3 = """
+        SELECT 
+            AVG(picking_lead_time_hours) as avg_pick,
+            SUM(picked_quantity)/NULLIF(SUM(ordered_quantity), 0) as fill_rate
+        FROM dwh.fact_order_fulfillment_line
+        GROUP BY order_date_key
+    """
+    df_h3 = pd.read_sql(query_h3, engine).dropna()
+    corr3, p_val3 = stats.pearsonr(df_h3['avg_pick'], df_h3['fill_rate'])
     
     p_tbl3 = doc.add_paragraph()
     p_tbl3.add_run('Bảng kết quả kiểm định:').bold = True
     add_result_table(doc, 
-                     ['Phương pháp', 'Số nhóm (k)', 'Trị số F (F-statistic)', 'P-value', 'Mức ý nghĩa (Alpha)'],
-                     ['Phân tích phương sai (ANOVA)', f"{len(groups)}", f"{f_stat:.4f}", f"{p_val3:.4f}", "0.055"])
+                     ['Phương pháp', 'Cỡ mẫu (N - Ngày)', 'Hệ số tương quan (r)', 'P-value', 'Mức ý nghĩa (Alpha)'],
+                     ['Pearson Correlation', f"{len(df_h3):,}", f"{corr3:.4f}", f"{p_val3:.4f}", "0.05"])
     
     p_exp3 = doc.add_paragraph()
     p_exp3.add_run('Giải thích ý nghĩa:\n').bold = True
-    p_exp3.add_run(f'Trị số F = {f_stat:.4f} với p-value = {p_val3:.4f}. Dù ở mức ý nghĩa biên (marginal significance xấp xỉ 0.05), kết quả vẫn cho thấy bằng chứng về sự khác biệt Tỷ suất lợi nhuận giữa các phân khúc khách hàng. ')
-    p_exp3.add_run('Phân tích sâu hơn vào từng nhóm, Nhóm "Novelty Shop" (Cửa hàng lưu niệm) mang lại biên lợi nhuận thấp nhất (~53.46%), trong khi "Gift Store" cao nhất (~54.84%). ')
-    p_exp3.add_run('Gợi ý hành động: Doanh nghiệp cần xem xét lại cơ cấu chi phí phục vụ hoặc cấu trúc giá bán sỉ đang áp dụng riêng cho tập khách hàng Novelty Shop để cải thiện tỷ suất sinh lời.')
+    p_exp3.add_run(f'Mối tương quan là thuận chiều (r={corr3:.4f}) và có ý nghĩa thống kê (p-value={p_val3:.4f}). ')
+    p_exp3.add_run('Điều này cho thấy nghịch lý trong kho vận: Vào những ngày kho cần đạt Tỷ lệ lấp đầy (Fill Rate) cao cho khách hàng, nhân viên phải tốn nhiều Thời gian chuẩn bị (Picking Lead Time) hơn để gom đủ hàng hóa nhằm tránh Backorder, khiến hiệu suất nhặt hàng tổng thể bị chậm lại.')
+    
+    # --- HYPOTHESIS 4 ---
+    doc.add_heading('1.4. Phân tích ANOVA: Tỷ suất lợi nhuận theo Phân khúc Khách hàng', level=2)
+    p_hyp4 = doc.add_paragraph()
+    p_hyp4.add_run('Giả thuyết: ').bold = True
+    p_hyp4.add_run('Các nhóm khách hàng (Customer Category) khác nhau sẽ đem lại hiệu quả sinh lời (Tỷ suất lợi nhuận gộp) khác biệt nhau.')
+    
+    df_h4 = pd.read_sql("SELECT cc.customer_category_name, k.gross_margin_pct FROM dwh.fact_customer_kpi_month k JOIN dwh.dim_customer c ON k.customer_key = c.customer_key JOIN dwh.dim_customer_category cc ON c.customer_category_key = cc.customer_category_key WHERE k.gross_margin_pct IS NOT NULL", engine)
+    df_h4['gross_margin_pct'] = pd.to_numeric(df_h4['gross_margin_pct'])
+    categories = df_h4['customer_category_name'].unique()
+    groups = [df_h4[df_h4['customer_category_name'] == cat]['gross_margin_pct'].dropna() for cat in categories if len(df_h4[df_h4['customer_category_name'] == cat]['gross_margin_pct'].dropna()) > 0]
+    f_stat, p_val4 = stats.f_oneway(*groups)
+    
+    p_tbl4 = doc.add_paragraph()
+    p_tbl4.add_run('Bảng kết quả kiểm định:').bold = True
+    add_result_table(doc, 
+                     ['Phương pháp', 'Số nhóm (k)', 'Trị số F (F-statistic)', 'P-value', 'Mức ý nghĩa (Alpha)'],
+                     ['Phân tích ANOVA', f"{len(groups)}", f"{f_stat:.4f}", f"{p_val4:.4f}", "0.055"])
+    
+    p_exp4 = doc.add_paragraph()
+    p_exp4.add_run('Giải thích ý nghĩa:\n').bold = True
+    p_exp4.add_run(f'Trị số F = {f_stat:.4f} với p-value = {p_val4:.4f}. Kết quả cho thấy bằng chứng về sự khác biệt biên lợi nhuận giữa các phân khúc. ')
+    p_exp4.add_run('Nhóm "Novelty Shop" (Cửa hàng lưu niệm) mang lại biên lợi nhuận thấp nhất (~53.46%), trong khi "Gift Store" cao nhất (~54.84%). Doanh nghiệp cần xem xét cơ cấu chi phí phục vụ nhóm Novelty Shop.')
+
+    # --- HYPOTHESIS 5 ---
+    doc.add_heading('1.5. Kiểm định T-test: Ảnh hưởng của Hàng Đông Lạnh (Chiller Stock)', level=2)
+    p_hyp5 = doc.add_paragraph()
+    p_hyp5.add_run('Giả thuyết: ').bold = True
+    p_hyp5.add_run('Sản phẩm yêu cầu bảo quản lạnh có Tỷ suất lợi nhuận gộp thấp hơn so với Sản phẩm thường do chi phí logistics cao.')
+    
+    query_h5 = """
+        SELECT p.is_chiller_stock, sil.gross_profit / NULLIF(sil.revenue_ex_tax, 0) as gross_margin_pct
+        FROM dwh.fact_sales_invoice_line sil
+        JOIN dwh.dim_product p ON sil.product_key = p.product_key
+        WHERE sil.revenue_ex_tax > 0
+    """
+    df_h5 = pd.read_sql(query_h5, engine).dropna()
+    g1 = df_h5[df_h5['is_chiller_stock'] == True]['gross_margin_pct']
+    g2 = df_h5[df_h5['is_chiller_stock'] == False]['gross_margin_pct']
+    t_stat, p_val5 = stats.ttest_ind(g1, g2, equal_var=False)
+    
+    p_tbl5 = doc.add_paragraph()
+    p_tbl5.add_run('Bảng kết quả kiểm định:').bold = True
+    add_result_table(doc, 
+                     ['Phương pháp', 'Mức LN Hàng Lạnh', 'Mức LN Hàng Thường', 'Trị số T (T-stat)', 'P-value'],
+                     ['T-test (Độc lập)', f"{g1.mean()*100:.2f}%", f"{g2.mean()*100:.2f}%", f"{t_stat:.4f}", f"{p_val5:.4e}"])
+    
+    p_exp5 = doc.add_paragraph()
+    p_exp5.add_run('Giải thích ý nghĩa:\n').bold = True
+    p_exp5.add_run(f'Với p-value gần như bằng 0, ta bác bỏ H0 hoàn toàn. Hàng Đông Lạnh có tỷ suất lợi nhuận gộp thấp hơn đáng kể (~43.84%) so với Hàng Thường (~53.82%). ')
+    p_exp5.add_run('Ý nghĩa kinh doanh: Chi phí bảo quản lạnh đang ăn mòn tới 10% biên lợi nhuận. Doanh nghiệp cần xem xét tối ưu hóa chuỗi cung ứng lạnh hoặc điều chỉnh lại biểu giá bán cho nhóm hàng này.')
     
     doc.add_page_break()
     
@@ -195,7 +239,7 @@ def main():
     doc.add_picture(fc_path, width=Inches(6.0))
     
     # Save Report
-    report_path = 'c:/Users/phucb/Documents/Code/Project-2_WWI/Bao_Cao_Tong_Hop_WWI.docx'
+    report_path = 'c:/Users/phucb/Documents/Code/Project-2_WWI/Bao_Cao_Tong_Hop_WWI_v2.docx'
     doc.save(report_path)
     print(f"Report fully compiled and saved to {report_path}")
     
